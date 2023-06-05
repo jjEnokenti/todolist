@@ -1,0 +1,80 @@
+version: "3.9"
+
+services:
+  frontend:
+    container_name: frontend-todo
+    image: sermalenk/skypro-front:lesson-34
+    ports:
+      - "80:80"
+    networks:
+      - todo-network
+    depends_on:
+      api:
+        condition: service_started
+
+  api:
+    container_name: api-todo
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - .env:/app/.env
+      - ../todo:/app/todo
+    env_file:
+      - .env
+    networks:
+      - todo-network
+    ports:
+      - ${API_PORT}:8000
+    depends_on:
+      migrations:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+    command: bash -c 'python3 ./todo/manage.py runserver ${API_HOST}:${API_PORT}'
+
+  migrations:
+    container_name: migrations-todo
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    volumes:
+      - .env:/app/.env
+    env_file:
+      - .env
+    networks:
+      - todo-network
+    depends_on:
+      db:
+        condition: service_healthy
+    command: bash -c 'python3 ./todo/manage.py makemigrations &&
+      python3 ./todo/manage.py migrate'
+
+  db:
+    container_name: postgres_db
+    image: postgres:15.1-alpine
+    restart: always
+    environment:
+      - PGUSER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - ${DB_PORT}:5432
+    networks:
+      - todo-network
+    volumes:
+      - ../postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", 'pg_isready']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  .env:
+  todo:
+
+networks:
+  todo-network:

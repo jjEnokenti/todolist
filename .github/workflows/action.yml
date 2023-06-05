@@ -1,0 +1,51 @@
+name: build todolist
+on: [push]
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone code
+        uses: actions/checkout@v2
+      - name: docker build
+        run: docker build -t jjenokenti/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
+      - name: docker login
+        run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
+      - name: docker push
+        run: docker push jjenokenti/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+  deploy_project:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    env:
+      API_HOST: "0.0.0.0"
+      API_PORT: "8000"
+      DB_PORT: "5432"
+      SECRET_KEY: ${{ secrets.API_SECRET_KEY }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+    steps:
+      - name: clone code
+        uses: actions/checkout@v2
+      - name: render configs
+        run: |
+          mkdir prepared
+          cat infra/.env.ci | envsubst > prepared/.env
+          cat infra/docker-compose-ci.yaml | envsubst > prepared/docker-compose.yaml
+      - name: copy files to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: "prepared/.env,prepared/docker-compose.yaml"
+          target: "todolist"
+          strip_components: 1
+      - name: start docker-compose
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd todolist
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d
