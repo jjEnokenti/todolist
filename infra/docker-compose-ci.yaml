@@ -29,8 +29,7 @@ services:
         condition: service_completed_successfully
       db:
         condition: service_healthy
-    command: bash -c 'echo 'yes' | python3 ./todo/manage.py collectstatic &&
-      python3 ./todo/manage.py runserver ${API_HOST}:${API_PORT}'
+    command: bash -c 'python3 manage.py runserver ${API_HOST}:${API_PORT}'
 
   migrations:
     container_name: migrations-todo
@@ -44,8 +43,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: bash -c 'python3 ./todo/manage.py makemigrations &&
-      python3 ./todo/manage.py migrate'
+    command: bash -c 'python3 manage.py makemigrations &&
+      python3 manage.py migrate'
 
   db:
     container_name: postgres_db

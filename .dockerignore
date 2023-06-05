@@ -1,6 +1,7 @@
 .idea
 venv
 __pycache__
+.github
 .dockerignore
 .pre-commit-config.yaml
 .gitignore
@@ -8,4 +9,3 @@ setup.cfg
 
 Dockerfile
 infra
-
