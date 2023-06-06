@@ -4,5 +4,5 @@ from .views import UserCreateView
 
 
 urlpatterns = [
-    path('core/signup', UserCreateView.as_view())
+    path('signup', UserCreateView.as_view())
 ]
