@@ -19,7 +19,6 @@ services:
       dockerfile: Dockerfile
     restart: always
     volumes:
-      - .env:/app/.env
       - ../todo:/app
     env_file:
       - .env
@@ -39,8 +38,6 @@ services:
     build:
       context: ../
       dockerfile: Dockerfile
-    volumes:
-      - .env:/app/.env
     env_file:
       - .env
     networks:
@@ -74,7 +71,6 @@ services:
 
 volumes:
   postgres_data:
-  .env:
   todo:
 
 networks:
