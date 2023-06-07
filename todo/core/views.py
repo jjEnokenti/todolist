@@ -35,20 +35,20 @@ class UserRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     queryset = User
     permission_classes = [IsAuthenticated]
 
-    def retrieve(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         self.serializer_class = UserRetrieveSerializer
         self.kwargs = {'pk': self.request.user.pk}
 
-        return super().retrieve(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
-    def update(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         self.serializer_class = UserUpdateSerializer
         self.kwargs = {'pk': self.request.user.pk}
 
-        return super().update(request, *args, **kwargs)
+        return super().put(request, *args, **kwargs)
 
-    def partial_update(self, request, *args, **kwargs):
+    def patch(self, request, *args, **kwargs):
         self.serializer_class = UserUpdateSerializer
         self.kwargs = {'pk': self.request.user.pk}
 
-        return super().partial_update(request, *args, **kwargs)
+        return super().patch(request, *args, **kwargs)
