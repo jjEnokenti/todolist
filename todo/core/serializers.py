@@ -81,3 +81,26 @@ class UserLoginSerializer(serializers.ModelSerializer):
             return user
 
         raise exceptions.AuthenticationFailed('Incorrect password or username')
+
+
+class UserRetrieveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'email'
+        )
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'username',
+            'first_name',
+            'last_name',
+            'email'
+        )
