@@ -4,8 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import (
     exceptions,
-    serializers,
-    status
+    serializers
 )
 
 from .models import User
@@ -118,10 +117,9 @@ class UserChangePasswordSerializer(serializers.Serializer):
 
         if not user.check_password(old_password):
             error_dict = {'current password': 'incorrect current password.'}
-            raise serializers.ValidationError(
-                detail=error_dict,
-                code=status.HTTP_403_FORBIDDEN
-            )
+            error = serializers.ValidationError
+            error.default_detail = error_dict
+            raise error
 
         try:
             validate_password(password=new_password)
