@@ -107,14 +107,14 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
 
 class UserChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(read_only=True)
-    new_password = serializers.CharField(read_only=True)
+    old_password = serializers.CharField(required=True, write_only=True)
+    new_password = serializers.CharField(required=True, write_only=True)
 
     def save(self, **kwargs):
         user = self.context['request'].user
 
-        old_password = self.initial_data.get('old_password')
-        new_password = self.initial_data.get('new_password')
+        old_password = self.validated_data.get('old_password')
+        new_password = self.validated_data.get('new_password')
 
         if not user.check_password(old_password):
             error_dict = {'current password': 'incorrect current password.'}
