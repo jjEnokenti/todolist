@@ -13,6 +13,7 @@ from rest_framework.response import Response
 
 from .models import User
 from .serializers import (
+    UserChangePasswordSerializer,
     UserCreateSerializer,
     UserLoginSerializer,
     UserRetrieveSerializer,
@@ -62,4 +63,17 @@ class UserRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     def delete(self, request):
         logout(request=request)
 
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class UserChangePasswordView(generics.UpdateAPIView):
+    serializer_class = UserChangePasswordSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = User
+
+    def update(self, request, *args, **kwargs):
+        self.lookup_url_kwarg = self.request.user.pk
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(status=status.HTTP_204_NO_CONTENT)

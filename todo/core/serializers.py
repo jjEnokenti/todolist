@@ -1,11 +1,11 @@
 import django.core.exceptions as django_exceptions
-import rest_framework.validators
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import (
     exceptions,
-    serializers
+    serializers,
+    status
 )
 
 from .models import User
@@ -43,7 +43,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             error_dict = {
                 'password': ['the password and the repeat password must match.']
             }
-            raise rest_framework.serializers.ValidationError(
+            raise serializers.ValidationError(
                 detail=error_dict
             )
 
@@ -104,3 +104,33 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             'last_name',
             'email'
         )
+
+
+class UserChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(read_only=True)
+    new_password = serializers.CharField(read_only=True)
+
+    def save(self, **kwargs):
+        user = self.context['request'].user
+
+        old_password = self.initial_data.get('old_password')
+        new_password = self.initial_data.get('new_password')
+
+        if not user.check_password(old_password):
+            error_dict = {'current password': 'incorrect current password.'}
+            raise serializers.ValidationError(
+                detail=error_dict,
+                code=status.HTTP_403_FORBIDDEN
+            )
+
+        try:
+            validate_password(password=new_password)
+        except django_exceptions.ValidationError as error:
+            error_dict = {'password': error.messages}
+            raise serializers.ValidationError(detail=error_dict)
+
+        user.set_password(new_password)
+
+        user.save()
+
+        return user
