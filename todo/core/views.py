@@ -1,7 +1,13 @@
-from django.contrib.auth import login
+from django.contrib.auth import (
+    login,
+    logout
+)
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
-from rest_framework import generics
+from rest_framework import (
+    generics,
+    status
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -52,3 +58,8 @@ class UserRetrieveUpdateView(generics.RetrieveUpdateAPIView):
         self.kwargs = {'pk': self.request.user.pk}
 
         return super().patch(request, *args, **kwargs)
+
+    def delete(self, request):
+        logout(request=request)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
