@@ -11,7 +11,6 @@ from rest_framework import (
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import User
 from .serializers import (
     UserChangePasswordSerializer,
     UserCreateSerializer,
@@ -23,7 +22,6 @@ from .serializers import (
 
 class UserCreateView(generics.CreateAPIView):
     serializer_class = UserCreateSerializer
-    queryset = User
 
 
 class UserLoginView(generics.GenericAPIView):
@@ -39,7 +37,6 @@ class UserLoginView(generics.GenericAPIView):
 
 @method_decorator(ensure_csrf_cookie, name='dispatch')
 class UserRetrieveUpdateView(generics.RetrieveUpdateAPIView):
-    queryset = User
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
@@ -69,7 +66,6 @@ class UserRetrieveUpdateView(generics.RetrieveUpdateAPIView):
 class UserChangePasswordView(generics.UpdateAPIView):
     serializer_class = UserChangePasswordSerializer
     permission_classes = [IsAuthenticated]
-    queryset = User
 
     def get_object(self):
         return self.request.user
