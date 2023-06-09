@@ -4,13 +4,13 @@ from .views import (
     UserChangePasswordView,
     UserCreateView,
     UserLoginView,
-    UserRetrieveUpdateView
+    UserProfileView
 )
 
 
 urlpatterns = [
     path('signup', UserCreateView.as_view()),
     path('login', UserLoginView.as_view()),
-    path('profile', UserRetrieveUpdateView.as_view()),
+    path('profile', UserProfileView.as_view()),
     path('update_password', UserChangePasswordView.as_view()),
 ]

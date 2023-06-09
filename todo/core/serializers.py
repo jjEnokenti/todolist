@@ -15,14 +15,16 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id',
-                  'username',
-                  'first_name',
-                  'last_name',
-                  'email',
-                  'password',
-                  'password_repeat',
-                  'role')
+        fields = (
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'password',
+            'password_repeat',
+            'role'
+        )
         extra_kwargs = {
             'id': {'required': False},
             'password': {'write_only': True},
@@ -79,10 +81,10 @@ class UserLoginSerializer(serializers.ModelSerializer):
         if user is not None:
             return user
 
-        raise exceptions.AuthenticationFailed('Incorrect password or username')
+        raise exceptions.AuthenticationFailed('Incorrect password or username.')
 
 
-class UserRetrieveSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
@@ -92,17 +94,9 @@ class UserRetrieveSerializer(serializers.ModelSerializer):
             'last_name',
             'email'
         )
-
-
-class UserUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = (
-            'username',
-            'first_name',
-            'last_name',
-            'email'
-        )
+        extra_kwargs = {
+            'id': {'read_only': True},
+        }
 
 
 class UserChangePasswordSerializer(serializers.Serializer):

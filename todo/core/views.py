@@ -15,8 +15,7 @@ from .serializers import (
     UserChangePasswordSerializer,
     UserCreateSerializer,
     UserLoginSerializer,
-    UserRetrieveSerializer,
-    UserUpdateSerializer
+    UserProfileSerializer
 )
 
 
@@ -36,26 +35,12 @@ class UserLoginView(generics.GenericAPIView):
 
 
 @method_decorator(ensure_csrf_cookie, name='dispatch')
-class UserRetrieveUpdateView(generics.RetrieveUpdateAPIView):
+class UserProfileView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = UserProfileSerializer
 
     def get_object(self):
         return self.request.user
-
-    def get(self, request, *args, **kwargs):
-        self.serializer_class = UserRetrieveSerializer
-
-        return super().get(request, *args, **kwargs)
-
-    def put(self, request, *args, **kwargs):
-        self.serializer_class = UserUpdateSerializer
-
-        return super().put(request, *args, **kwargs)
-
-    def patch(self, request, *args, **kwargs):
-        self.serializer_class = UserUpdateSerializer
-
-        return super().patch(request, *args, **kwargs)
 
     def delete(self, request):
         logout(request=request)
@@ -69,10 +54,3 @@ class UserChangePasswordView(generics.UpdateAPIView):
 
     def get_object(self):
         return self.request.user
-
-    def update(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
