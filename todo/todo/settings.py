@@ -13,6 +13,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 MY_APPS = [
     'core',
+    'goals',
 ]
 
 INSTALLED_APPS = [
