@@ -42,21 +42,21 @@ class UserRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     queryset = User
     permission_classes = [IsAuthenticated]
 
+    def get_object(self):
+        return self.request.user
+
     def get(self, request, *args, **kwargs):
         self.serializer_class = UserRetrieveSerializer
-        self.kwargs = {'pk': self.request.user.pk}
 
         return super().get(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         self.serializer_class = UserUpdateSerializer
-        self.kwargs = {'pk': self.request.user.pk}
 
         return super().put(request, *args, **kwargs)
 
     def patch(self, request, *args, **kwargs):
         self.serializer_class = UserUpdateSerializer
-        self.kwargs = {'pk': self.request.user.pk}
 
         return super().patch(request, *args, **kwargs)
 
@@ -71,9 +71,12 @@ class UserChangePasswordView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = User
 
+    def get_object(self):
+        return self.request.user
+
     def update(self, request, *args, **kwargs):
-        self.lookup_url_kwarg = self.request.user.pk
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
         return Response(status=status.HTTP_204_NO_CONTENT)
