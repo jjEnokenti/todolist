@@ -39,7 +39,7 @@ class GoalCategoryManageView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return GoalCategory.objects.filter(
-            user=self.request.user, is_deleted=False, id=self.kwargs['pk']
+            user=self.request.user, is_deleted=False
         )
 
     def perform_destroy(self, instance):
