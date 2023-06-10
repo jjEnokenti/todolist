@@ -1,7 +1,7 @@
 from goals.models import GoalCategory
 from goals.serializers.category import (
     GoalCategoryCreateSerializer,
-    GoalCategoryListSerializer
+    GoalCategorySerializer
 )
 from rest_framework import (
     filters,
@@ -18,7 +18,7 @@ class GoalCategoryCreateView(generics.CreateAPIView):
 
 
 class GoalCategoryListView(generics.ListAPIView):
-    serializer_class = GoalCategoryListSerializer
+    serializer_class = GoalCategorySerializer
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = pagination.LimitOffsetPagination
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
@@ -31,3 +31,18 @@ class GoalCategoryListView(generics.ListAPIView):
         return GoalCategory.objects.filter(
             user=self.request.user, is_deleted=False
         )
+
+
+class GoalCategoryManageView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = GoalCategorySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return GoalCategory.objects.filter(
+            user=self.request.user, is_deleted=False, id=self.kwargs['pk']
+        )
+
+    def perform_destroy(self, instance):
+        instance.is_deleted = True
+        instance.save()
+        return instance
