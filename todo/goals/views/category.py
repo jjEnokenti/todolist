@@ -3,8 +3,8 @@ from rest_framework import (
     permissions
 )
 
-from .models import GoalCategory
-from .serializers.category import GoalCategoryCreateSerializer
+from ..models import GoalCategory
+from ..serializers.category import GoalCategoryCreateSerializer
 
 
 class GoalCategoryCreateView(generics.CreateAPIView):
