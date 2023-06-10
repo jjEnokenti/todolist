@@ -4,7 +4,9 @@ from goals.serializers.category import (
     GoalCategoryListSerializer
 )
 from rest_framework import (
+    filters,
     generics,
+    pagination,
     permissions
 )
 
@@ -18,6 +20,12 @@ class GoalCategoryCreateView(generics.CreateAPIView):
 class GoalCategoryListView(generics.ListAPIView):
     serializer_class = GoalCategoryListSerializer
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = pagination.LimitOffsetPagination
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+
+    ordering = ['title']
+    ordering_fields = ['title', 'created']
+    search_fields = ['title']
 
     def get_queryset(self):
         return GoalCategory.objects.filter(
