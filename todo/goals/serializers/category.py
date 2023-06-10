@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from todo.goals.models import GoalCategory
+from .models import GoalCategory
 
 
 class GoalCategoryCreateSerializer(serializers.ModelSerializer):

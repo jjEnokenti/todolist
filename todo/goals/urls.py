@@ -1,6 +1,6 @@
 from django.urls import path
 
-from todo.goals.views import category
+from .views import category
 
 
 urlpatterns = [

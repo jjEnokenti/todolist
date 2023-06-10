@@ -3,8 +3,8 @@ from rest_framework import (
     permissions
 )
 
-from todo.goals.models import GoalCategory
-from todo.goals.serializers.category import GoalCategoryCreateSerializer
+from .models import GoalCategory
+from .serializers.category import GoalCategoryCreateSerializer
 
 
 class GoalCategoryCreateView(generics.CreateAPIView):
