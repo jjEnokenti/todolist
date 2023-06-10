@@ -14,4 +14,5 @@ urlpatterns = [
 
     # goal
     path('goal/list', goal.GoalListView.as_view()),
+    path('goal/create', goal.GoalCreateView.as_view()),
 ]

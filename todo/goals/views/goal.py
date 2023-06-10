@@ -1,5 +1,8 @@
 from goals.models import Goal
-from goals.serializers.goal import GoalListSerializer
+from goals.serializers.goal import (
+    GoalCreateSerializer,
+    GoalListSerializer
+)
 from rest_framework import (
     filters,
     generics,
@@ -24,3 +27,9 @@ class GoalListView(generics.ListAPIView):
             category__is_deleted=False,
             status__in=(1, 2, 3)
         )
+
+
+class GoalCreateView(generics.CreateAPIView):
+    model = Goal
+    serializer_class = GoalCreateSerializer
+    permission_classes = [permissions.IsAuthenticated]
