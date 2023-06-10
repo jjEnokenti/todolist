@@ -59,7 +59,10 @@ class Goal(models.Model):
         choices=Priority.choices,
         default=Priority.medium
     )
-    deadline = models.DateTimeField(verbose_name='Дата дедлайна')
+    deadline = models.DateTimeField(
+        verbose_name='Дата дедлайна',
+        default=timezone.now() + timezone.timedelta(days=2)
+    )
     created = models.DateTimeField(verbose_name='Дата создания')
     updated = models.DateTimeField(verbose_name='Дата последнего обновления')
 
