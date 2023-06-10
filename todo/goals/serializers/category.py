@@ -1,6 +1,6 @@
+from core.serializers import UserProfileSerializer
+from goals.models import GoalCategory
 from rest_framework import serializers
-
-from ..models import GoalCategory
 
 
 class GoalCategoryCreateSerializer(serializers.ModelSerializer):
@@ -9,4 +9,12 @@ class GoalCategoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = GoalCategory
         read_only_fields = ('id', 'user', 'created', 'updated')
+        fields = '__all__'
+
+
+class GoalCategoryListSerializer(serializers.ModelSerializer):
+    user = UserProfileSerializer(read_only=True)
+
+    class Meta:
+        model = GoalCategory
         fields = '__all__'
