@@ -68,6 +68,6 @@ class Comment(models.Model):
 
     user = models.ForeignKey(user, verbose_name='Автор', on_delete=models.PROTECT)
     goal = models.ForeignKey(Goal, verbose_name='Цель', on_delete=models.CASCADE)
-    comment = models.TextField(verbose_name='Комментарий')
+    text = models.TextField(verbose_name='Комментарий')
     created = models.DateTimeField(verbose_name='Создан', auto_now_add=True)
     updated = models.DateTimeField(verbose_name='Обновлен', auto_now=True)
