@@ -6,7 +6,7 @@ from goals.models import (
 )
 from goals.serializers.goal import (
     GoalCreateSerializer,
-    GoalManageSerializer
+    GoalSerializer
 )
 from rest_framework import (
     filters,
@@ -17,7 +17,7 @@ from rest_framework import (
 
 
 class GoalListView(generics.ListAPIView):
-    serializer_class = GoalManageSerializer
+    serializer_class = GoalSerializer
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = pagination.LimitOffsetPagination
 
@@ -42,14 +42,13 @@ class GoalListView(generics.ListAPIView):
 
 
 class GoalCreateView(generics.CreateAPIView):
-    model = Goal
     serializer_class = GoalCreateSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
-class GoalManageView(generics.RetrieveUpdateDestroyAPIView):
+class GoalView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = GoalManageSerializer
+    serializer_class = GoalSerializer
 
     def get_queryset(self):
         return Goal.objects.filter(category__user=self.request.user)

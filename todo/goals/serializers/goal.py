@@ -2,7 +2,7 @@ from goals.models import Goal
 from rest_framework import serializers
 
 
-class GoalManageSerializer(serializers.ModelSerializer):
+class GoalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Goal
