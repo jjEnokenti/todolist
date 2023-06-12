@@ -33,7 +33,7 @@ class GoalCategoryListView(generics.ListAPIView):
         )
 
 
-class GoalCategoryManageView(generics.RetrieveUpdateDestroyAPIView):
+class GoalCategoryView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = GoalCategorySerializer
     permission_classes = [permissions.IsAuthenticated]
 
