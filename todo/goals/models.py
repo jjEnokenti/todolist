@@ -6,6 +6,8 @@ user = get_user_model()
 
 
 class DateTimeMixin(models.Model):
+    """Абстрактная модель даты создания и обновления записи."""
+
     class Meta:
         abstract = True
 
@@ -13,13 +15,67 @@ class DateTimeMixin(models.Model):
     updated = models.DateTimeField(verbose_name='Дата последнего обновления', auto_now=True)
 
 
+class Board(DateTimeMixin):
+    """Модель доски."""
+
+    class Meta:
+        verbose_name = 'Доска'
+        verbose_name_plural = 'Доски'
+
+    title = models.CharField(verbose_name='Название', max_length=255)
+    is_deleted = models.BooleanField(verbose_name='Удалена', default=False)
+
+    def __str__(self):
+        return self.title
+
+
+class BoardParticipant(DateTimeMixin):
+    """Модель участника доски."""
+
+    class Role(models.IntegerChoices):
+        owner = 1, 'Владелец'
+        writer = 2, 'Редактор'
+        reader = 3, 'Читатель'
+
+    class Meta:
+        unique_together = ('board', 'user')
+        verbose_name = 'Участник'
+        verbose_name_plural = 'Участники'
+
+    board = models.ForeignKey(
+        Board,
+        verbose_name='Доска',
+        on_delete=models.PROTECT,
+        related_name='participants'
+    )
+    user = models.ForeignKey(
+        user,
+        verbose_name='Участник',
+        on_delete=models.PROTECT,
+        related_name='participants'
+    )
+    role = models.PositiveSmallIntegerField(
+        verbose_name='Роль',
+        choices=Role.choices,
+        default=Role.owner
+    )
+
+
 class GoalCategory(DateTimeMixin):
+    """Модель категории целей."""
+
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
     title = models.CharField(verbose_name='Название', max_length=255)
     user = models.ForeignKey(user, verbose_name='Автор', on_delete=models.PROTECT)
+    board = models.ForeignKey(
+        Board,
+        verbose_name='Доска',
+        on_delete=models.CASCADE,
+        related_name='categories'
+    )
     is_deleted = models.BooleanField(verbose_name='Удалена', default=False)
 
     def __str__(self):
@@ -27,6 +83,8 @@ class GoalCategory(DateTimeMixin):
 
 
 class Goal(DateTimeMixin):
+    """Модель целей."""
+
     class Status(models.IntegerChoices):
         to_do = (1, 'К выполнению')
         in_progress = (2, 'В процессе')
@@ -71,6 +129,8 @@ class Goal(DateTimeMixin):
 
 
 class Comment(DateTimeMixin):
+    """Модель комментариев к цели."""
+
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
