@@ -7,14 +7,12 @@ class GoalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Goal
         fields = '__all__'
-        extra_kwargs = {
-            'id': {'read_only': True},
-            'created': {'read_only': True},
-            'updated': {'read_only': True},
-            'category': {'read_only': True},
-            'due_date': {'required': False},
-            'description': {'required': False}
-        }
+        read_only_fields = (
+            'id',
+            'created',
+            'updated',
+            'category'
+        )
 
 
 class GoalCreateSerializer(serializers.ModelSerializer):
