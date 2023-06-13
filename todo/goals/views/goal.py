@@ -36,9 +36,8 @@ class GoalListView(generics.ListAPIView):
     def get_queryset(self):
         return Goal.objects.filter(
             category__user=self.request.user,
-            category__is_deleted=False,
-            status__in=(1, 2, 3)
-        )
+            category__is_deleted=False
+        ).exclude(status=Status.archived)
 
 
 class GoalCreateView(generics.CreateAPIView):
