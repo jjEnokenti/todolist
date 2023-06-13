@@ -1,4 +1,8 @@
-from goals.models import GoalCategory
+from django.db import transaction
+from goals.models import (
+    GoalCategory,
+    Status
+)
 from goals.serializers.category import (
     GoalCategoryCreateSerializer,
     GoalCategorySerializer
@@ -43,6 +47,7 @@ class GoalCategoryView(generics.RetrieveUpdateDestroyAPIView):
         )
 
     def perform_destroy(self, instance):
-        instance.is_deleted = True
-        instance.save()
-        return instance
+        with transaction.atomic():
+            instance.is_deleted = True
+            instance.save(update_fields=('is_deleted',))
+            instance.goal_set.update(status=Status.archived)
