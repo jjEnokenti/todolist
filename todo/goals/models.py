@@ -5,21 +5,15 @@ from django.db import models
 user = get_user_model()
 
 
-class Status(models.IntegerChoices):
-    to_do = (1, 'К выполнению')
-    in_progress = (2, 'В процессе')
-    done = (3, 'Готово')
-    archived = (4, 'В архиве')
+class DateTimeMixin(models.Model):
+    class Meta:
+        abstract = True
+
+    created = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
+    updated = models.DateTimeField(verbose_name='Дата последнего обновления', auto_now=True)
 
 
-class Priority(models.IntegerChoices):
-    low = (1, 'Низкий')
-    medium = (2, 'Средний')
-    high = (3, 'Высокий')
-    critical = (4, 'Критический')
-
-
-class GoalCategory(models.Model):
+class GoalCategory(DateTimeMixin):
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
@@ -27,14 +21,24 @@ class GoalCategory(models.Model):
     title = models.CharField(verbose_name='Название', max_length=255)
     user = models.ForeignKey(user, verbose_name='Автор', on_delete=models.PROTECT)
     is_deleted = models.BooleanField(verbose_name='Удалена', default=False)
-    created = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
-    updated = models.DateTimeField(verbose_name='Дата последнего обновления', auto_now=True)
 
     def __str__(self):
         return self.title
 
 
-class Goal(models.Model):
+class Goal(DateTimeMixin):
+    class Status(models.IntegerChoices):
+        to_do = (1, 'К выполнению')
+        in_progress = (2, 'В процессе')
+        done = (3, 'Готово')
+        archived = (4, 'В архиве')
+
+    class Priority(models.IntegerChoices):
+        low = (1, 'Низкий')
+        medium = (2, 'Средний')
+        high = (3, 'Высокий')
+        critical = (4, 'Критический')
+
     class Meta:
         verbose_name = 'Цель'
         verbose_name_plural = 'Цели'
@@ -61,14 +65,12 @@ class Goal(models.Model):
         null=True,
         blank=True
     )
-    created = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
-    updated = models.DateTimeField(verbose_name='Дата последнего обновления', auto_now=True)
 
     def __str__(self):
         return self.title
 
 
-class Comment(models.Model):
+class Comment(DateTimeMixin):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
@@ -76,5 +78,3 @@ class Comment(models.Model):
     user = models.ForeignKey(user, verbose_name='Автор', on_delete=models.PROTECT)
     goal = models.ForeignKey(Goal, verbose_name='Цель', on_delete=models.CASCADE)
     text = models.TextField(verbose_name='Комментарий')
-    created = models.DateTimeField(verbose_name='Создан', auto_now_add=True)
-    updated = models.DateTimeField(verbose_name='Обновлен', auto_now=True)
