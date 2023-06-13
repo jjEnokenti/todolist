@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from goals.models import Comment
 from goals.serializers.comment import (
     CommentCreateSerializer,
@@ -21,14 +22,15 @@ class CommentListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = pagination.LimitOffsetPagination
 
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+
+    filterset_fields = ['goal']
 
     ordering = ['-created']
 
     def get_queryset(self):
         return Comment.objects.filter(
-            user=self.request.user,
-            goal=self.request.query_params.get('goal')
+            user=self.request.user
         )
 
 
