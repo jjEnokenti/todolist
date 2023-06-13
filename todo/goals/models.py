@@ -40,7 +40,12 @@ class Goal(models.Model):
         verbose_name_plural = 'Цели'
 
     title = models.CharField(verbose_name='Название', max_length=155)
-    description = models.CharField(verbose_name='Описание', max_length=500)
+    description = models.CharField(
+        verbose_name='Описание',
+        max_length=500,
+        null=True,
+        blank=True
+    )
     category = models.ForeignKey(GoalCategory, verbose_name='Категория', on_delete=models.CASCADE)
     status = models.PositiveSmallIntegerField(
         verbose_name='Статус',
@@ -52,7 +57,9 @@ class Goal(models.Model):
         default=Priority.medium
     )
     due_date = models.DateTimeField(
-        verbose_name='Дата дедлайна'
+        verbose_name='Дата дедлайна',
+        null=True,
+        blank=True
     )
     created = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
     updated = models.DateTimeField(verbose_name='Дата последнего обновления', auto_now=True)
