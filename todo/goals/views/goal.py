@@ -1,9 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from goals.filters import GoalListFilters
-from goals.models import (
-    Goal,
-    Status
-)
+from goals.models import Goal
 from goals.serializers.goal import (
     GoalCreateSerializer,
     GoalSerializer
@@ -37,7 +34,7 @@ class GoalListView(generics.ListAPIView):
         return Goal.objects.filter(
             category__user=self.request.user,
             category__is_deleted=False
-        ).exclude(status=Status.archived)
+        ).exclude(status=Goal.Status.archived)
 
 
 class GoalCreateView(generics.CreateAPIView):

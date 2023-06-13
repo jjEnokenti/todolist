@@ -1,7 +1,7 @@
 from django.db import transaction
 from goals.models import (
-    GoalCategory,
-    Status
+    Goal,
+    GoalCategory
 )
 from goals.serializers.category import (
     GoalCategoryCreateSerializer,
@@ -50,4 +50,4 @@ class GoalCategoryView(generics.RetrieveUpdateDestroyAPIView):
         with transaction.atomic():
             instance.is_deleted = True
             instance.save(update_fields=('is_deleted',))
-            instance.goal_set.update(status=Status.archived)
+            instance.goal_set.update(status=Goal.Status.archived)
