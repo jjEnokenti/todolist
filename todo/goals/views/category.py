@@ -56,3 +56,6 @@ class GoalCategoryView(generics.RetrieveUpdateDestroyAPIView):
             instance.is_deleted = True
             instance.save(update_fields=('is_deleted',))
             instance.goal_set.update(status=Goal.Status.archived)
+
+            for goal in instance.goal_set.filter(category=instance):
+                goal.comment_set.filter(goal=goal).delete()
