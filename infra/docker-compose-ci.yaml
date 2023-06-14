@@ -3,7 +3,7 @@ version: "3.9"
 services:
   frontend:
     container_name: frontend-todo
-    image: sermalenk/skypro-front:lesson-36
+    image: sermalenk/skypro-front:lesson-37
     ports:
       - "80:80"
     networks:
