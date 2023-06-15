@@ -17,16 +17,17 @@ class GoalCategoryCreateSerializer(serializers.ModelSerializer):
     def validate_board(self, board):
         if board.is_deleted:
             raise serializers.ValidationError({'create error': 'Board is deleted.'})
-        if not board.participants.filter(
+        if board.participants.filter(
                 board=board,
                 user=self.context['request'].user,
                 role__in=(
                         board.participants.model.Role.owner,
                         board.participants.model.Role.writer
                 )
-        ):
-            raise exceptions.PermissionDenied
-        return board
+        ).exists():
+            return board
+
+        raise exceptions.PermissionDenied('You do not have permissions for edite this board.')
 
 
 class GoalCategorySerializer(serializers.ModelSerializer):
