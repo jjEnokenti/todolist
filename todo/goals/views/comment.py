@@ -1,5 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from goals.models import Comment
+from goals.permissions import CommentPermission
 from goals.serializers.comment import (
     CommentCreateSerializer,
     CommentSerializer
@@ -19,7 +20,7 @@ class CommentCreateView(generics.CreateAPIView):
 
 class CommentListView(generics.ListAPIView):
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, CommentPermission]
     pagination_class = pagination.LimitOffsetPagination
 
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
@@ -30,15 +31,15 @@ class CommentListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Comment.objects.filter(
-            user=self.request.user
+            goal__category__board__participants__user=self.request.user
         )
 
 
 class CommentView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, CommentPermission]
 
     def get_queryset(self):
         return Comment.objects.filter(
-            user=self.request.user
+            goal__category__board__participants__user=self.request.user
         )
