@@ -1,6 +1,8 @@
+from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend
 from goals.filters import GoalListFilters
 from goals.models import Goal
+from goals.permissions import GoalPermission
 from goals.serializers.goal import (
     GoalCreateSerializer,
     GoalSerializer
@@ -25,14 +27,14 @@ class GoalListView(generics.ListAPIView):
     ]
     filterset_class = GoalListFilters
 
-    ordering = ['-priority', 'due_date']
-    ordering_fields = ['due_date']
+    ordering = ['-priority']
+    ordering_fields = ['-priority', 'due_date']
 
     search_fields = ['title']
 
     def get_queryset(self):
         return Goal.objects.filter(
-            category__user=self.request.user,
+            category__board__participants__user=self.request.user,
             category__is_deleted=False
         ).exclude(status=Goal.Status.archived)
 
@@ -43,8 +45,17 @@ class GoalCreateView(generics.CreateAPIView):
 
 
 class GoalView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, GoalPermission]
     serializer_class = GoalSerializer
 
     def get_queryset(self):
-        return Goal.objects.filter(category__user=self.request.user)
+        return Goal.objects.filter(
+            category__board__participants__user=self.request.user,
+            category__is_deleted=False
+        ).exclude(status=Goal.Status.archived)
+
+    def perform_destroy(self, instance):
+        with transaction.atomic():
+            instance.status = Goal.Status.archived
+            instance.save(update_fields=('status',))
+            instance.comment_set.filter(goal=instance).delete()
