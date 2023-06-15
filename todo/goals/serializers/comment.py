@@ -1,6 +1,12 @@
 from core.serializers import UserProfileSerializer
-from goals.models import Comment
-from rest_framework import serializers
+from goals.models import (
+    BoardParticipant,
+    Comment
+)
+from rest_framework import (
+    exceptions,
+    serializers
+)
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -27,3 +33,18 @@ class CommentCreateSerializer(serializers.ModelSerializer):
             'updated': {'read_only': True},
             'user': {'read_only': True},
         }
+
+    def validate_goal(self, goal):
+        if goal.status == goal.Status.archived:
+            raise serializers.ValidationError({'create error': 'goal is deleted.'})
+        if BoardParticipant.objects.filter(
+                board=goal.category.board,
+                user=self.context['request'].user,
+                role__in=(
+                        BoardParticipant.Role.owner,
+                        BoardParticipant.Role.writer
+                )
+        ).exists():
+            return goal
+
+        raise exceptions.PermissionDenied('You do not have permissions to write comments.')
