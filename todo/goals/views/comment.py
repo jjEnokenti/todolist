@@ -20,7 +20,7 @@ class CommentCreateView(generics.CreateAPIView):
 
 class CommentListView(generics.ListAPIView):
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticated, CommentPermission]
+    permission_classes = [permissions.IsAuthenticated]
     pagination_class = pagination.LimitOffsetPagination
 
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
