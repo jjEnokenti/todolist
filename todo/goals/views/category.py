@@ -19,12 +19,12 @@ from rest_framework import (
 
 class GoalCategoryCreateView(generics.CreateAPIView):
     serializer_class = GoalCategoryCreateSerializer
-    permission_classes = [permissions.IsAuthenticated, GoalCategoryPermission]
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class GoalCategoryListView(generics.ListAPIView):
     serializer_class = GoalCategorySerializer
-    permission_classes = [permissions.IsAuthenticated, GoalCategoryPermission]
+    permission_classes = [permissions.IsAuthenticated]
     pagination_class = pagination.LimitOffsetPagination
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_fields = ['board']

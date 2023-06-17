@@ -20,7 +20,7 @@ from rest_framework import (
 
 class BoardListView(generics.ListAPIView):
     serializer_class = BoardListSerializer
-    permission_classes = [permissions.IsAuthenticated, BoardPermission]
+    permission_classes = [permissions.IsAuthenticated]
     pagination_class = pagination.LimitOffsetPagination
 
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
@@ -57,4 +57,4 @@ class BoardView(generics.RetrieveUpdateDestroyAPIView):
 
 class BoardCreateView(generics.CreateAPIView):
     serializer_class = BoardCreateSerializer
-    permission_classes = [permissions.IsAuthenticated, BoardPermission]
+    permission_classes = [permissions.IsAuthenticated]
