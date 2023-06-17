@@ -3,7 +3,7 @@ version: "3.9"
 services:
   frontend:
     container_name: frontend-todo
-    image: sermalenk/skypro-front:lesson-37
+    image: sermalenk/skypro-front:lesson-38
     ports:
       - "80:80"
     networks:
@@ -30,6 +30,20 @@ services:
       db:
         condition: service_healthy
     command: bash -c 'python3 manage.py runserver ${API_HOST}:${API_PORT}'
+
+  bot:
+    container_name: bot-todo
+    image: jjenokenti/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    env_file:
+      - .env
+    networks:
+      - todo-network
+    depends_on:
+      db:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    command: bash -c './manage.py runbot'
 
   migrations:
     container_name: migrations-todo
