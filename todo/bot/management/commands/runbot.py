@@ -1,11 +1,17 @@
 import os
 
-from aiogram.types import Message
+from aiogram.types import (
+    Message,
+    Update
+)
 from bot.models import TgUser
 from bot.tg.client import TgClient
 from django.core.management.base import BaseCommand
 from dotenv import load_dotenv
-from goals.models import Goal
+from goals.models import (
+    Goal,
+    GoalCategory
+)
 
 
 load_dotenv()
@@ -76,3 +82,59 @@ class Command(BaseCommand):
         )) for goal in goals])
 
         self.send_message(chat_id=message.chat.id, text=text)
+
+    def input_data(self, message: Message, text: str):
+        while True:
+            self.tg_client.send_message(
+                message.chat.id,
+                text=text)
+            temp = self.tg_client.get_updates(offset=self.offset)
+            if temp.result:
+                new: Update = temp.result[0]
+                self.offset = new.update_id + 1
+                return new
+
+    def get_category(self, message: Message, tg_user: TgUser):
+        user_categories = [f'{cat.title}: {cat.id}' for cat in GoalCategory.objects.filter(
+            board__participants__user=tg_user.user,
+            is_deleted=False
+        )]
+        format_categories = '\n'.join(user_categories)
+        text = f'Выберите категорию из списка \n{format_categories} \nи отправь ее номер в ответном сообщении'
+        category = self.input_data(message, text).message.text
+        if category == '/cancel':
+            return self.cancel(chat_id=message.chat.id)
+        elif category not in format_categories:
+            return self.send_message(chat_id=message.chat.id, text='Такой категории не существует.')
+
+        return category
+
+    def cancel(self, chat_id):
+        self.send_message(chat_id=chat_id, text='Операция отменена.')
+
+    def goal_create(self, message: Message, tg_user: TgUser):
+        while True:
+
+            category = self.get_category(message, tg_user)
+            if category is None:
+                break
+            goal_title = self.input_data(message, text='Введите названия своей цели').message.text
+            if goal_title == '/cancel':
+                return self.cancel(chat_id=message.chat.id)
+
+            new_goal = Goal.objects.create(
+                category_id=category,
+                title=goal_title
+            )
+            if new_goal:
+                text = '\n'.join(
+                    (f'Название - {new_goal.title}',
+                     f'Описание - {new_goal.description or "Blank"}',
+                     f'Категория - {new_goal.category.title}',
+                     f'Статус - {new_goal.get_status_display()}',
+                     f'Приоритет - {new_goal.get_priority_display()}',
+                     f'Дата дедлайна - {new_goal.due_date or "Indefinite"}',
+                     f'Дата создания - {new_goal.created}',
+                     f'Дата обновления - {new_goal.updated}'))
+                return self.tg_client.send_message(chat_id=message.chat.id, text=text)
+            self.tg_client.send_message(message.chat.id, text='Не удалось создать цель, попробуйте еще раз.')
