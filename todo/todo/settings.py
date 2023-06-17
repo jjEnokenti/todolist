@@ -1,6 +1,10 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -10,10 +14,10 @@ DEBUG = bool(int(os.getenv('DEBUG', False)))
 
 ALLOWED_HOSTS = ['*']
 
-# Application definition
 MY_APPS = [
     'core',
     'goals',
+    'bot',
 ]
 
 INSTALLED_APPS = [
