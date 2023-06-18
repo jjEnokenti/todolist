@@ -15,13 +15,13 @@ class TgClient:
 
     def get_updates(self, offset: int = 0, timeout: int = 60) -> GetUpdatesResponse:
         url = self.get_url(method='getUpdates')
-        raw_response = requests.get(url=url, params={'offset': offset, 'timeout': timeout}).json()
+        raw_response = requests.get(url=url, params={'offset': offset, 'timeout': timeout}, verify=False).json()
         updates = [Update(**update) for update in raw_response['result']]
         response = GetUpdatesResponse(ok=raw_response['ok'], result=updates)
         return response
 
     def send_message(self, chat_id: int, text: str) -> SendMessageResponse:
         method = f'sendMessage?chat_id={chat_id}&text={text}'
-        raw_response = requests.get(self.get_url(method=method)).json()
+        raw_response = requests.get(self.get_url(method=method), verify=False).json()
         response = SendMessageResponse(**raw_response)
         return response
