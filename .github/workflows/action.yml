@@ -22,6 +22,7 @@ jobs:
       API_HOST: "0.0.0.0"
       API_PORT: "8000"
       DB_PORT: "5432"
+      TELEGRAM_BOT_API_KEY: ${{ secrets.TELEGRAM_BOT_API_KEY }}
       VK_OAUTH2_ID: ${{ secrets.VK_OAUTH2_ID }}
       VK_OAUTH2_SECRET: ${{ secrets.VK_OAUTH2_SECRET }}
       SECRET_KEY: ${{ secrets.API_SECRET_KEY }}

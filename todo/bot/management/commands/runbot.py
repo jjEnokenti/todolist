@@ -136,5 +136,5 @@ class Command(BaseCommand):
                      f'Дата дедлайна - {new_goal.due_date or "Indefinite"}',
                      f'Дата создания - {new_goal.created}',
                      f'Дата обновления - {new_goal.updated}'))
-                return self.tg_client.send_message(chat_id=message.chat.id, text=text)
-            self.tg_client.send_message(message.chat.id, text='Не удалось создать цель, попробуйте еще раз.')
+                return self.send_message(chat_id=message.chat.id, text=text)
+            self.send_message(message.chat.id, text='Не удалось создать цель, попробуйте еще раз.')
