@@ -34,6 +34,8 @@ services:
   bot:
     container_name: bot-todo
     image: jjenokenti/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    volumes:
+      - .env:/app/.env
     env_file:
       - .env
     networks:
