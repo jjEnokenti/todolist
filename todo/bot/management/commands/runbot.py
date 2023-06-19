@@ -31,8 +31,21 @@ class Command(BaseCommand):
             result = self.tg_client.get_updates(offset=self.offset)
             for item in result.result:
                 self.offset = item.update_id + 1
-                print(item.message)
                 self.handle_message(item.message)
+
+    def send_message(self, chat_id, text: str):
+        self.tg_client.send_message(chat_id=chat_id, text=text)
+
+    def input_data(self, message: Message, text: str):
+        while True:
+            self.tg_client.send_message(
+                message.chat.id,
+                text=text)
+            temp = self.tg_client.get_updates(offset=self.offset)
+            if temp.result:
+                new: Update = temp.result[0]
+                self.offset = new.update_id + 1
+                return new
 
     def handle_message(self, message: Message):
         user = message.from_user
@@ -42,6 +55,7 @@ class Command(BaseCommand):
             tg_user_id=user.id,
             chat_id=message.chat.id
         )
+
         if message.text == '/start':
             if created:
                 self.send_message(chat_id=message.chat.id, text=f'Привет {tg_user.tg_username}')
@@ -53,7 +67,7 @@ class Command(BaseCommand):
                     code = tg_user.verification_code
                 else:
                     code = tg_user.generate_code()
-                text = f'Необходимо верифицировать бота на сайте.\n{code} введите этот код на сайте'
+                text = f'Необходимо верифицировать бота.\n{code} введите этот код на сайте'
                 self.send_message(chat_id=message.chat.id, text=text)
 
             elif message.text == '/goals':
@@ -63,9 +77,6 @@ class Command(BaseCommand):
                 self.goal_create(message, tg_user)
             else:
                 self.send_message(message.chat.id, text='Неизвестная команда.')
-
-    def send_message(self, chat_id, text: str):
-        self.tg_client.send_message(chat_id=chat_id, text=text)
 
     def get_goals(self, message: Message, tg_user: TgUser):
 
@@ -87,20 +98,13 @@ class Command(BaseCommand):
 
         self.send_message(chat_id=message.chat.id, text=text)
 
-    def input_data(self, message: Message, text: str):
-        while True:
-            self.tg_client.send_message(
-                message.chat.id,
-                text=text)
-            temp = self.tg_client.get_updates(offset=self.offset)
-            if temp.result:
-                new: Update = temp.result[0]
-                self.offset = new.update_id + 1
-                return new
-
     def get_category(self, message: Message, tg_user: TgUser):
         categories = GoalCategory.objects.filter(
             board__participants__user=tg_user.user,
+            board__participants__role__in=[
+                BoardParticipant.Role.owner,
+                BoardParticipant.Role.writer
+            ],
             is_deleted=False
         )
         if not categories:
@@ -112,7 +116,7 @@ class Command(BaseCommand):
                 BoardParticipant.objects.create(board=board, user=tg_user.user, role=BoardParticipant.Role.owner)
             categories = [GoalCategory.objects.create(title='Новая категория', user=tg_user.user, board=board)]
 
-        user_categories = [f'{cat.title}: {cat.id}' for cat in categories]
+        user_categories = [f'{cat.id}: {cat.title}' for cat in categories]
 
         format_categories = '\n'.join(user_categories)
         text = f'Выберите категорию из списка \n{format_categories} \nи отправь ее номер в ответном сообщении'
