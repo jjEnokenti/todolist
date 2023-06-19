@@ -107,7 +107,7 @@ class Command(BaseCommand):
             board = Board.objects.filter(
                 participants__user=tg_user.user,
                 participants__role=BoardParticipant.Role.owner)
-            categories = GoalCategory.objects.create('Новая категория', board=board)
+            categories = GoalCategory.objects.create(title='Новая категория', board=board)
 
         user_categories = [f'{cat.title}: {cat.id}' for cat in categories]
 
