@@ -55,6 +55,8 @@ class Command(BaseCommand):
             tg_user_id=user.id,
             chat_id=message.chat.id
         )
+        if message.text == '/cancel':
+            self.send_message(chat_id=message.chat.id, text='Отменять нечего.')
 
         if message.text == '/start':
             if created:
