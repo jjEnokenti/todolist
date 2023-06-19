@@ -58,7 +58,7 @@ class Command(BaseCommand):
         if message.text == '/cancel':
             self.send_message(chat_id=message.chat.id, text='Отменять нечего.')
 
-        if message.text == '/start':
+        elif message.text == '/start':
             if created:
                 self.send_message(chat_id=message.chat.id, text=f'Привет {tg_user.tg_username}')
             else:
