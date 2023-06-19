@@ -112,7 +112,9 @@ class Command(BaseCommand):
         if not categories:
             board = Board.objects.filter(
                 participants__user=tg_user.user,
-                participants__role=BoardParticipant.Role.owner).first()
+                participants__role=BoardParticipant.Role.owner,
+                is_deleted=False
+            ).first()
             if not board:
                 board = Board.objects.create(title='Мои цели')
                 BoardParticipant.objects.create(board=board, user=tg_user.user, role=BoardParticipant.Role.owner)
