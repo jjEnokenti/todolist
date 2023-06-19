@@ -9,6 +9,8 @@ from bot.tg.client import TgClient
 from django.core.management.base import BaseCommand
 from dotenv import load_dotenv
 from goals.models import (
+    Board,
+    BoardParticipant,
     Goal,
     GoalCategory
 )
@@ -70,6 +72,8 @@ class Command(BaseCommand):
         goals = Goal.objects.filter(category__board__participants__user=tg_user.user).exclude(
             status=Goal.Status.archived
         )
+        if not goals:
+            return self.send_message(chat_id=message.chat.id, text='У вас пока еще нет целей.')
         text = '\n----------\n'.join(['\n'.join((
             f'Название - {goal.title}',
             f'Описание - {goal.description or "Blank"}',
@@ -95,10 +99,18 @@ class Command(BaseCommand):
                 return new
 
     def get_category(self, message: Message, tg_user: TgUser):
-        user_categories = [f'{cat.title}: {cat.id}' for cat in GoalCategory.objects.filter(
+        categories = GoalCategory.objects.filter(
             board__participants__user=tg_user.user,
             is_deleted=False
-        )]
+        )
+        if not categories:
+            board = Board.objects.filter(
+                participants__user=tg_user.user,
+                participants__role=BoardParticipant.Role.owner)
+            categories = GoalCategory.objects.create('Новая категория', board=board)
+
+        user_categories = [f'{cat.title}: {cat.id}' for cat in categories]
+
         format_categories = '\n'.join(user_categories)
         text = f'Выберите категорию из списка \n{format_categories} \nи отправь ее номер в ответном сообщении'
         category = self.input_data(message, text).message.text
