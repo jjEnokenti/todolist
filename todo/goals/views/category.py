@@ -35,7 +35,7 @@ class GoalCategoryListView(generics.ListAPIView):
     search_fields = ['title']
 
     def get_queryset(self):
-        return GoalCategory.objects.filter(
+        return GoalCategory.objects.select_related('user').select_related('board').filter(
             board__participants__user=self.request.user,
             is_deleted=False
         )
@@ -46,7 +46,7 @@ class GoalCategoryView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, GoalCategoryPermission]
 
     def get_queryset(self):
-        return GoalCategory.objects.filter(
+        return GoalCategory.objects.select_related('user').filter(
             board__participants__user=self.request.user,
             is_deleted=False
         )

@@ -30,7 +30,7 @@ class CommentListView(generics.ListAPIView):
     ordering = ['-created']
 
     def get_queryset(self):
-        return Comment.objects.filter(
+        return Comment.objects.select_related('goal').select_related('user').filter(
             goal__category__board__participants__user=self.request.user
         )
 
@@ -40,6 +40,6 @@ class CommentView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, CommentPermission]
 
     def get_queryset(self):
-        return Comment.objects.filter(
+        return Comment.objects.select_related('goal').select_related('user').filter(
             goal__category__board__participants__user=self.request.user
         )

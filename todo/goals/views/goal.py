@@ -49,7 +49,7 @@ class GoalView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = GoalSerializer
 
     def get_queryset(self):
-        return Goal.objects.filter(
+        return Goal.objects.select_related('category').filter(
             category__board__participants__user=self.request.user,
             category__is_deleted=False
         ).exclude(status=Goal.Status.archived)
