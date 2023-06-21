@@ -1,5 +1,6 @@
 import time
 
+from bot.custom_exceptions import CategoryNotFound
 from bot.tg.client import TgClient
 from bot.tg.controller import Controller
 from bot.tg.dc import Message
@@ -111,9 +112,12 @@ class Command(BaseCommand):
             try:
                 category = int(category)
                 if not controller.get_category(category):
-                    return self.send_message(message.chat.id, 'Такой категории не существует.')
-            except Exception:
+                    raise CategoryNotFound
+            except TypeError:
                 text = 'Категория должна быть числом. Попробуйте еще раз.'
+                continue
+            except CategoryNotFound as err:
+                text = f'{err.message} Выберите из списка.'
                 continue
             break
 

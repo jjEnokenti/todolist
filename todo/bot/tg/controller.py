@@ -20,7 +20,7 @@ USER_MODEL = get_user_model()
 
 class Controller:
     def __init__(self, message: Message, allowed_commands: list | None = None):
-        self.allowed_commands = allowed_commands or ['/create', '/cancel', '/goals']
+        self.allowed_commands = allowed_commands or ['/create', '/cancel', '/goals', '/start']
         self.message = message
         self.user: User = message.from_user
 
