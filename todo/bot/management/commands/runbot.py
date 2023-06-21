@@ -113,7 +113,7 @@ class Command(BaseCommand):
                 category = int(category)
                 if not controller.get_category(category):
                     raise CategoryNotFound
-            except TypeError:
+            except (ValueError, TypeError):
                 text = 'Категория должна быть числом. Попробуйте еще раз.'
                 continue
             except CategoryNotFound as err:
