@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from goals.models import (
     Board,
-    BoardParticipant
+    BoardParticipant,
 )
 from rest_framework import serializers
 
@@ -36,7 +36,7 @@ class BoardSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created', 'updated')
 
     def update(self, instance, validated_data):
-        user_owner = validated_data.pop('user')
+        user_owner = self.context['request'].user or validated_data.pop('user')
         participants_data = validated_data.pop('participants')
         title = validated_data.pop('title')
 

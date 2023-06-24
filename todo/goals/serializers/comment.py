@@ -1,11 +1,11 @@
 from core.serializers import UserProfileSerializer
 from goals.models import (
     BoardParticipant,
-    Comment
+    Comment,
 )
 from rest_framework import (
     exceptions,
-    serializers
+    serializers,
 )
 
 
@@ -20,6 +20,12 @@ class CommentSerializer(serializers.ModelSerializer):
             'updated': {'read_only': True},
             'goal': {'read_only': True},
         }
+
+    def update(self, instance, validated_data):
+        if instance.user != self.context['request'].user:
+            raise exceptions.PermissionDenied('You do not have permissions to update this comment.')
+
+        return super().update(instance, validated_data)
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
