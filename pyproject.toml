@@ -22,6 +22,9 @@ requests = "^2.31.0"
 mypy = "^1.3.0"
 marshmallow-dataclass = "^8.5.14"
 drf-spectacular = "^0.26.2"
+pytest-django = "^4.5.2"
+factory-boy = "^3.2.1"
+pytest-factoryboy = "^2.5.1"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.2"
@@ -30,3 +33,8 @@ django-debug-toolbar = "^4.1.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "todo.settings"
+addopts = '-p no:warnings'
+python_files = '*_tests.py test_*.py tests_*.py test_ _test'
