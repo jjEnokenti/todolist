@@ -3,13 +3,14 @@ from goals.models import Comment
 from goals.permissions import CommentPermission
 from goals.serializers.comment import (
     CommentCreateSerializer,
-    CommentSerializer
+    CommentSerializer,
 )
 from rest_framework import (
+    exceptions,
     filters,
     generics,
     pagination,
-    permissions
+    permissions,
 )
 
 
@@ -43,3 +44,8 @@ class CommentView(generics.RetrieveUpdateDestroyAPIView):
         return Comment.objects.select_related('goal').select_related('user').filter(
             goal__category__board__participants__user=self.request.user
         )
+
+    def perform_destroy(self, instance):
+        if self.request.user != instance.user:
+            raise exceptions.PermissionDenied('You do not have permissions to delete this comment.')
+        return super().perform_destroy(instance)
