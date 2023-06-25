@@ -9,6 +9,8 @@ TEST_USER_PASSWORD = '12345ewqqwe'
 
 
 class UserFactory(factory.django.DjangoModelFactory):
+    """User factory."""
+
     class Meta:
         model = USER_MODEL
 
@@ -18,6 +20,8 @@ class UserFactory(factory.django.DjangoModelFactory):
 
 
 class BoardFactory(factory.django.DjangoModelFactory):
+    """Board factory."""
+
     class Meta:
         model = models.Board
 
@@ -25,6 +29,8 @@ class BoardFactory(factory.django.DjangoModelFactory):
 
 
 class BoardParticipantFactory(factory.django.DjangoModelFactory):
+    """Board participants factory."""
+
     class Meta:
         model = models.BoardParticipant
 
@@ -34,6 +40,8 @@ class BoardParticipantFactory(factory.django.DjangoModelFactory):
 
 
 class GoalCategoryFactory(factory.django.DjangoModelFactory):
+    """Category factory."""
+
     class Meta:
         model = models.GoalCategory
 
@@ -43,6 +51,8 @@ class GoalCategoryFactory(factory.django.DjangoModelFactory):
 
 
 class GoalFactory(factory.django.DjangoModelFactory):
+    """Goal factory."""
+
     class Meta:
         model = models.Goal
 
@@ -51,6 +61,8 @@ class GoalFactory(factory.django.DjangoModelFactory):
 
 
 class CommentFactory(factory.django.DjangoModelFactory):
+    """Comment factory."""
+
     class Meta:
         model = models.Comment
 
