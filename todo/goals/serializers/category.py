@@ -2,11 +2,16 @@ from core.serializers import UserProfileSerializer
 from goals.models import GoalCategory
 from rest_framework import (
     exceptions,
-    serializers
+    serializers,
 )
 
 
 class GoalCategoryCreateSerializer(serializers.ModelSerializer):
+    """Category create serializer.
+
+    define board validate method.
+    """
+
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -31,6 +36,7 @@ class GoalCategoryCreateSerializer(serializers.ModelSerializer):
 
 
 class GoalCategorySerializer(serializers.ModelSerializer):
+    """Category serializer."""
     user = UserProfileSerializer(read_only=True)
 
     class Meta:

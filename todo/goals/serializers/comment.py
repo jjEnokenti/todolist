@@ -10,6 +10,11 @@ from rest_framework import (
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    """Comment serializer.
+
+    override update method for
+    checking whether a comment belongs to the user.
+    """
     user = UserProfileSerializer(read_only=True)
 
     class Meta:
@@ -29,6 +34,10 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
+    """Comment create serializer.
+
+    define goal validate method
+    """
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:

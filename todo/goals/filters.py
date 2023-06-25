@@ -5,6 +5,8 @@ from goals.models import Goal
 
 
 class GoalListFilters(f.FilterSet):
+    """Filter for goal list view."""
+
     class Meta:
         model = Goal
         fields = {

@@ -1,20 +1,26 @@
 from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 from goals.filters import GoalListFilters
 from goals.models import Goal
 from goals.permissions import GoalPermission
 from goals.serializers.goal import (
     GoalCreateSerializer,
-    GoalSerializer
+    GoalSerializer,
 )
 from rest_framework import (
     filters,
     generics,
     pagination,
-    permissions
+    permissions,
 )
 
 
+@extend_schema(
+    tags=['goals'],
+    description='Response list of goals',
+    summary='list of goals'
+)
 class GoalListView(generics.ListAPIView):
     serializer_class = GoalSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -39,11 +45,17 @@ class GoalListView(generics.ListAPIView):
         ).exclude(status=Goal.Status.archived)
 
 
+@extend_schema(
+    tags=['goals'],
+    description='Create new goal method',
+    summary='create new goal'
+)
 class GoalCreateView(generics.CreateAPIView):
     serializer_class = GoalCreateSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
+@extend_schema(tags=['goals'])
 class GoalView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, GoalPermission]
     serializer_class = GoalSerializer

@@ -9,6 +9,7 @@ permission_roles = (
 
 
 class BoardPermission(permissions.BasePermission):
+    """Check permissions for change board object."""
 
     def has_object_permission(self, request, view, obj):
         attrs = {'user': request.user, 'board': obj}
@@ -19,6 +20,8 @@ class BoardPermission(permissions.BasePermission):
 
 
 class GoalCategoryPermission(permissions.BasePermission):
+    """Check permissions for change goal category object."""
+
     def has_object_permission(self, request, view, obj):
         attrs = {'user': request.user, 'board': obj.board}
 
@@ -28,6 +31,8 @@ class GoalCategoryPermission(permissions.BasePermission):
 
 
 class GoalPermission(permissions.BasePermission):
+    """Check permissions for change goal object."""
+
     def has_object_permission(self, request, view, obj):
         attrs = {'user': request.user, 'board': obj.category.board}
 
@@ -38,6 +43,8 @@ class GoalPermission(permissions.BasePermission):
 
 
 class CommentPermission(permissions.BasePermission):
+    """Check permissions for change goal comment object."""
+
     def has_object_permission(self, request, view, obj):
         attrs = {'user': request.user, 'board': obj.goal.category.board}
 

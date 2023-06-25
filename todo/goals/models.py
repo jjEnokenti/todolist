@@ -6,7 +6,7 @@ user = get_user_model()
 
 
 class DateTimeMixin(models.Model):
-    """Абстрактная модель даты создания и обновления записи."""
+    """Abstract model of created and updated dates."""
 
     class Meta:
         abstract = True
@@ -16,7 +16,7 @@ class DateTimeMixin(models.Model):
 
 
 class Board(DateTimeMixin):
-    """Модель доски."""
+    """Board model."""
 
     class Meta:
         verbose_name = 'Доска'
@@ -30,7 +30,7 @@ class Board(DateTimeMixin):
 
 
 class BoardParticipant(DateTimeMixin):
-    """Модель участника доски."""
+    """Board participants model."""
 
     class Role(models.IntegerChoices):
         owner = 1, 'Владелец'
@@ -62,7 +62,7 @@ class BoardParticipant(DateTimeMixin):
 
 
 class GoalCategory(DateTimeMixin):
-    """Модель категории целей."""
+    """Goal category model."""
 
     class Meta:
         verbose_name = 'Категория'
@@ -83,7 +83,7 @@ class GoalCategory(DateTimeMixin):
 
 
 class Goal(DateTimeMixin):
-    """Модель целей."""
+    """Goal model."""
 
     class Status(models.IntegerChoices):
         to_do = (1, 'К выполнению')
@@ -129,7 +129,7 @@ class Goal(DateTimeMixin):
 
 
 class Comment(DateTimeMixin):
-    """Модель комментариев к цели."""
+    """Goal comment model."""
 
     class Meta:
         verbose_name = 'Комментарий'
