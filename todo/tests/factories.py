@@ -1,9 +1,11 @@
 import factory
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
 from goals import models
 
 
 USER_MODEL = get_user_model()
+TEST_USER_PASSWORD = '12345ewqqwe'
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -11,8 +13,8 @@ class UserFactory(factory.django.DjangoModelFactory):
         model = USER_MODEL
 
     username = factory.Sequence(lambda n: f'test_user_{n}')
-    password = 'password'
     email = factory.Sequence(lambda n: f'test{n}@example.com')
+    password = make_password(TEST_USER_PASSWORD)
 
 
 class BoardFactory(factory.django.DjangoModelFactory):
