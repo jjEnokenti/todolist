@@ -1,12 +1,13 @@
 from django.contrib.auth import (
     login,
-    logout
+    logout,
 )
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
+from drf_spectacular.utils import extend_schema
 from rest_framework import (
     generics,
-    status
+    status,
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -15,10 +16,15 @@ from .serializers import (
     UserChangePasswordSerializer,
     UserCreateSerializer,
     UserLoginSerializer,
-    UserProfileSerializer
+    UserProfileSerializer,
 )
 
 
+@extend_schema(
+    tags=['auth'],
+    description='Register new user method',
+    summary='register new user'
+)
 class UserCreateView(generics.CreateAPIView):
     serializer_class = UserCreateSerializer
 
@@ -26,6 +32,11 @@ class UserCreateView(generics.CreateAPIView):
 class UserLoginView(generics.GenericAPIView):
     serializer_class = UserLoginSerializer
 
+    @extend_schema(
+        tags=['auth'],
+        description='User login method',
+        summary='authenticate user'
+    )
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -35,19 +46,32 @@ class UserLoginView(generics.GenericAPIView):
 
 
 @method_decorator(ensure_csrf_cookie, name='dispatch')
-class UserProfileView(generics.RetrieveUpdateAPIView):
+@extend_schema(
+    tags=['profile'],
+)
+class UserProfileView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserProfileSerializer
 
     def get_object(self):
         return self.request.user
 
-    def delete(self, request):
+    @extend_schema(
+        tags=['profile'],
+        description='User logout',
+        summary='user logout'
+    )
+    def delete(self, request, *args, **kwargs):
         logout(request=request)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@extend_schema(
+    tags=['profile'],
+    description='User profile change password method',
+    summary='profile password change'
+)
 class UserChangePasswordView(generics.UpdateAPIView):
     serializer_class = UserChangePasswordSerializer
     permission_classes = [IsAuthenticated]
