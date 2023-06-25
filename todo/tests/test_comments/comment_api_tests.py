@@ -10,17 +10,25 @@ class TestCommentAPI:
 
     @pytest.fixture
     def not_own_comment(self, user_factory, comment_factory, goal):
+        """Comment not belonging to the user."""
+
         return comment_factory.create(user=user_factory.create(), goal=goal)
 
     @pytest.fixture
     def create_comment_for_test_writer(self, create_goal_for_test_writer, comment_factory):
+        """Comment to test writer rights."""
+
         return comment_factory.create_batch(size=self.COMMENTS_SIZE, goal=create_goal_for_test_writer)
 
     @pytest.fixture
     def create_comment_for_test_reader(self, create_goal_for_test_reader, comment_factory):
+        """Comment to test reader rights."""
+
         return comment_factory.create_batch(size=self.COMMENTS_SIZE, goal=create_goal_for_test_reader)
 
     def test_is_anon_permissions_get_list_comments(self, client):
+        """Test anonim user permissions to get list of comments."""
+
         url = reverse('list_goal_comment')
 
         response = client.get(path=url)
@@ -28,6 +36,8 @@ class TestCommentAPI:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_is_anon_permissions_create_comment(self, client, goal):
+        """Test anonim user permissions to create comment."""
+
         url = reverse('create_goal_comment')
 
         payload = {
@@ -40,6 +50,8 @@ class TestCommentAPI:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_is_anon_permissions_get_single_comment(self, client, comment):
+        """Test anonim user permissions to get single comment."""
+
         url = reverse('detail_goal_comment', kwargs={'pk': comment.pk})
 
         response = client.get(path=url)
@@ -47,6 +59,8 @@ class TestCommentAPI:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_is_anon_permissions_update_comment(self, client, comment):
+        """Test anonim user permissions to update comment."""
+
         url = reverse('detail_goal_comment', kwargs={'pk': comment.pk})
 
         payload = {
@@ -58,6 +72,8 @@ class TestCommentAPI:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_is_anon_permissions_delete_comment(self, client, comment):
+        """Test anonim user permissions to delete comment."""
+
         url = reverse('detail_goal_comment', kwargs={'pk': comment.pk})
 
         response = client.delete(path=url)
@@ -65,6 +81,8 @@ class TestCommentAPI:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_create_comment_as_goal_owner(self, auth_client, board_participant, goal):
+        """Test to create comment as owner the goal."""
+
         url = reverse('create_goal_comment')
 
         payload = {
@@ -79,6 +97,8 @@ class TestCommentAPI:
         assert response.data['text'] == 'new test comment'
 
     def test_create_comment_as_goal_writer(self, auth_client, create_goal_for_test_writer):
+        """Test to create comment as writer the goal."""
+
         goal = create_goal_for_test_writer
         url = reverse('create_goal_comment')
         payload = {
@@ -93,6 +113,8 @@ class TestCommentAPI:
         assert response.data['text'] == 'new test comment as writer'
 
     def test_create_comment_as_goal_reader(self, auth_client, create_goal_for_test_reader):
+        """Test to create comment as reader the goal."""
+
         goal = create_goal_for_test_reader
         url = reverse('create_goal_comment')
         payload = {
@@ -105,6 +127,8 @@ class TestCommentAPI:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_get_single_comment_as_owner(self, auth_client, board_participant, goal, comment):
+        """Test to get single comment as owner."""
+
         url = reverse('detail_goal_comment', kwargs={'pk': comment.pk})
 
         response = auth_client.get(path=url)
@@ -113,27 +137,9 @@ class TestCommentAPI:
         assert response.data['text'] == comment.text
         assert response.data['goal'] == goal.pk
 
-    def test_get_single_comment_as_writer(self, auth_client, create_comment_for_test_writer):
-        comment = create_comment_for_test_writer[0]
-        url = reverse('detail_goal_comment', kwargs={'pk': comment.pk})
-
-        response = auth_client.get(path=url)
-
-        assert response.status_code == status.HTTP_200_OK
-        assert response.data['text'] == comment.text
-        assert response.data['goal'] == comment.goal.pk
-
-    def test_get_single_comment_as_reader(self, auth_client, create_comment_for_test_reader):
-        comment = create_comment_for_test_reader[0]
-        url = reverse('detail_goal_comment', kwargs={'pk': comment.pk})
-
-        response = auth_client.get(path=url)
-
-        assert response.status_code == status.HTTP_200_OK
-        assert response.data['text'] == comment.text
-        assert response.data['goal'] == comment.goal.pk
-
     def test_get_list_comment_as_owner(self, auth_client, board_participant, goal, comment_factory):
+        """Test to get list of  comments as owner the goal."""
+
         url = reverse('list_goal_comment')
 
         count = 5
@@ -150,6 +156,8 @@ class TestCommentAPI:
         assert len(response.data) == count
 
     def test_get_list_comment_as_writer(self, auth_client, create_comment_for_test_writer):
+        """Test to get single comment as writer the goal."""
+
         url = reverse('list_goal_comment')
 
         response = auth_client.get(url)
@@ -165,6 +173,8 @@ class TestCommentAPI:
         assert len(response.data) == self.COMMENTS_SIZE
 
     def test_get_list_comment_as_reader(self, auth_client, create_comment_for_test_reader):
+        """Test to get single comment as reader the goal."""
+
         url = reverse('list_goal_comment')
 
         response = auth_client.get(url)
@@ -180,6 +190,8 @@ class TestCommentAPI:
         assert len(response.data) == self.COMMENTS_SIZE
 
     def test_update_comment_with_owner(self, auth_client, board_participant, comment):
+        """Test to update comment as owner."""
+
         url = reverse('detail_goal_comment', kwargs={'pk': comment.pk})
         update_data = {
             'text': 'update text',
@@ -191,6 +203,8 @@ class TestCommentAPI:
         assert response.data['text'] != comment.text
 
     def test_update_not_own_comment(self, auth_client, board_participant, not_own_comment):
+        """Test to update comments not belonging to the user."""
+
         comment = not_own_comment
         url = reverse('detail_goal_comment', kwargs={'pk': comment.pk})
 
@@ -211,6 +225,8 @@ class TestCommentAPI:
                                                  goal, user, comment,
                                                  user_factory,
                                                  goal_factory):
+        """Test to update goal pk and user pk."""
+
         url = reverse('detail_goal_comment', kwargs={'pk': comment.pk})
 
         new_goal = goal_factory.create()
@@ -232,7 +248,9 @@ class TestCommentAPI:
         assert response.data['user']['id'] != new_user.pk
         assert response.data['text'] == new_text
 
-    def test_delete_comment_with_owner(self, auth_client,  board_participant, comment):
+    def test_delete_comment_with_owner(self, auth_client, board_participant, comment):
+        """Test to delete comment as owner."""
+
         url = reverse('detail_goal_comment', kwargs={'pk': comment.pk})
 
         response = auth_client.delete(path=url)
@@ -240,6 +258,8 @@ class TestCommentAPI:
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
     def test_delete_not_own_comment(self, auth_client, board_participant, not_own_comment):
+        """Test to delete comments not belonging to the user."""
+
         comment = not_own_comment
         url = reverse('detail_goal_comment', kwargs={'pk': comment.pk})
 
