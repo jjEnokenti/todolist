@@ -1,11 +1,12 @@
 from goals.models import Goal
 from rest_framework import (
     exceptions,
-    serializers
+    serializers,
 )
 
 
 class GoalSerializer(serializers.ModelSerializer):
+    """Goal serializer."""
     class Meta:
         model = Goal
         fields = '__all__'
@@ -18,6 +19,10 @@ class GoalSerializer(serializers.ModelSerializer):
 
 
 class GoalCreateSerializer(serializers.ModelSerializer):
+    """Goal create serializer.
+
+    define category validate method.
+    """
     class Meta:
         model = Goal
         fields = '__all__'

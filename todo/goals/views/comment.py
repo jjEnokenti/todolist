@@ -1,4 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 from goals.models import Comment
 from goals.permissions import CommentPermission
 from goals.serializers.comment import (
@@ -14,11 +15,21 @@ from rest_framework import (
 )
 
 
+@extend_schema(
+    tags=['goal comments'],
+    description='New goal comment create method',
+    summary='create new goal comment'
+)
 class CommentCreateView(generics.CreateAPIView):
     serializer_class = CommentCreateSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
+@extend_schema(
+    tags=['goal comments'],
+    description='Response list of goal comments',
+    summary='list of goal comments'
+)
 class CommentListView(generics.ListAPIView):
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -36,6 +47,7 @@ class CommentListView(generics.ListAPIView):
         )
 
 
+@extend_schema(tags=['goal comments'])
 class CommentView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated, CommentPermission]

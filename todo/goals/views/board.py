@@ -1,23 +1,29 @@
 from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 from goals.models import (
     Board,
-    Goal
+    Goal,
 )
 from goals.permissions import BoardPermission
 from goals.serializers.board import (
     BoardCreateSerializer,
     BoardListSerializer,
-    BoardSerializer
+    BoardSerializer,
 )
 from rest_framework import (
     filters,
     generics,
     pagination,
-    permissions
+    permissions,
 )
 
 
+@extend_schema(
+    tags=['boards'],
+    description='Response list fo boards',
+    summary='list of boards'
+)
 class BoardListView(generics.ListAPIView):
     serializer_class = BoardListSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -35,6 +41,7 @@ class BoardListView(generics.ListAPIView):
         )
 
 
+@extend_schema(tags=['boards'])
 class BoardView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BoardSerializer
     permission_classes = [permissions.IsAuthenticated, BoardPermission]
@@ -55,6 +62,11 @@ class BoardView(generics.RetrieveUpdateDestroyAPIView):
         return instance
 
 
+@extend_schema(
+    tags=['boards'],
+    description='New board create method',
+    summary='create new board'
+)
 class BoardCreateView(generics.CreateAPIView):
     serializer_class = BoardCreateSerializer
     permission_classes = [permissions.IsAuthenticated]

@@ -11,6 +11,7 @@ USER_MODEL = get_user_model()
 
 
 class BoardParticipantSerializer(serializers.ModelSerializer):
+    """Board participants serializer."""
     role = serializers.ChoiceField(
         required=True,
         choices=BoardParticipant.Role.choices
@@ -27,6 +28,10 @@ class BoardParticipantSerializer(serializers.ModelSerializer):
 
 
 class BoardSerializer(serializers.ModelSerializer):
+    """Board serializer.
+
+    override update method for add and remove board participants.
+    """
     participants = BoardParticipantSerializer(many=True)
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
@@ -69,6 +74,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
 
 class BoardCreateSerializer(serializers.ModelSerializer):
+    """Board create serializer."""
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -87,6 +93,7 @@ class BoardCreateSerializer(serializers.ModelSerializer):
 
 
 class BoardListSerializer(serializers.ModelSerializer):
+    """Board list serializer."""
     class Meta:
         model = Board
         fields = '__all__'
