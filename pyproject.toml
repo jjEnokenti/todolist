@@ -25,6 +25,7 @@ drf-spectacular = "^0.26.2"
 pytest-django = "^4.5.2"
 factory-boy = "^3.2.1"
 pytest-factoryboy = "^2.5.1"
+coverage = "^7.2.7"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.2"
