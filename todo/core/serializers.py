@@ -4,13 +4,17 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import (
     exceptions,
-    serializers
+    serializers,
 )
 
 from .models import User
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
+    """User create serializer.
+
+    override create method for passport validation.
+    """
     password_repeat = serializers.CharField(write_only=True)
 
     class Meta:
@@ -57,12 +61,14 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserListSerializer(serializers.ModelSerializer):
+    """User list serializer."""
     class Meta:
         model = User
         exclude = ('password',)
 
 
 class UserLoginSerializer(serializers.ModelSerializer):
+    """User login serializer."""
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
 
@@ -70,7 +76,9 @@ class UserLoginSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'password')
 
-    def create(self, validated_data):
+    def create(self, validated_data) -> User | exceptions.AuthenticationFailed:
+        """User login logic."""
+
         username = validated_data.get('username')
         password = validated_data.get('password')
 
@@ -85,6 +93,8 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    """User profile serializer."""
+
     class Meta:
         model = User
         fields = (
@@ -100,10 +110,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class UserChangePasswordSerializer(serializers.Serializer):
+    """User change password serializer."""
+
     old_password = serializers.CharField(required=True, write_only=True)
     new_password = serializers.CharField(required=True, write_only=True)
 
-    def save(self, **kwargs):
+    def save(self, **kwargs) -> User:
+        """Override save method for validation old and new passwords."""
         user = self.context['request'].user
 
         old_password = self.validated_data.get('old_password')
