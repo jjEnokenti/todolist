@@ -107,6 +107,8 @@ class TestUserAPI:
         assert response.data['email'] == ['Enter a valid email address.']
 
     def test_user_login_valid_credentials(self, auth_client, user, password):
+        """Test login user with valid credentials."""
+
         url = reverse('user_login')
 
         payload = {
@@ -120,6 +122,8 @@ class TestUserAPI:
         assert response.data['username'] == user.username
 
     def test_user_login_invalid_credentials(self, auth_client, user):
+        """Test login user with invalid credentials."""
+
         url = reverse('user_login')
 
         payload = {
@@ -132,6 +136,8 @@ class TestUserAPI:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_user_login_blank_password_field(self, auth_client, user):
+        """Test login user with blank password field."""
+
         url = reverse('user_login')
 
         payload = {
@@ -145,6 +151,8 @@ class TestUserAPI:
         assert response.data['password'] == ['This field may not be blank.']
 
     def test_user_update_password_ok(self, password, auth_client):
+        """Test success change old password."""
+
         url = reverse('update_password')
 
         payload = {
@@ -158,6 +166,8 @@ class TestUserAPI:
         assert response.data == {}
 
     def test_user_update_password_incorrect_old_password(self, auth_client, password):
+        """Test change old password with incorrect old password."""
+
         url = reverse('update_password')
 
         payload = {
@@ -171,6 +181,8 @@ class TestUserAPI:
         assert response.data['current password'] == 'incorrect current password.'
 
     def test_user_update_password_invalid_new_password(self, password, auth_client):
+        """Test change old password with invalid new password."""
+
         url = reverse('update_password')
 
         payload = {
@@ -184,6 +196,8 @@ class TestUserAPI:
         assert response.data['password'] == ['This password is too common.']
 
     def test_user_update_profile(self, auth_client):
+        """Test update profile data."""
+
         url = reverse('user_profile')
 
         payload = {
@@ -196,6 +210,8 @@ class TestUserAPI:
         assert response.data['username'] == 'NEW_TEST_USERNAME'
 
     def test_user_update_profile_with_invalid_data(self, auth_client):
+        """Test update profile with invalid data."""
+
         url = reverse('user_profile')
 
         payload = {
@@ -208,6 +224,8 @@ class TestUserAPI:
         assert response.data['email'] == ['Enter a valid email address.']
 
     def test_user_update_profile_username_exist(self, auth_client, user_factory):
+        """Test update profile username to an existing one."""
+
         url = reverse('user_profile')
 
         user_factory.create(username='username')
@@ -222,6 +240,8 @@ class TestUserAPI:
         assert response.data['username'] == ['A user with that username already exists.']
 
     def test_user_logout_ok(self, auth_client):
+        """Test success logout."""
+
         url = reverse('user_profile')
 
         response = auth_client.delete(path=url)
@@ -229,6 +249,8 @@ class TestUserAPI:
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
     def test_not_login_user_try_logout(self, client):
+        """Test logout without login."""
+
         url = reverse('user_profile')
 
         response = client.delete(path=url)
