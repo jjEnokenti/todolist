@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  api:
+    container_name: api-todo
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ../todo:/app
+    env_file:
+      - .env
+    networks:
+      - todo-network
+    ports:
+      - ${API_PORT}:8000
+    depends_on:
+      db:
+        condition: service_healthy
+    command: bash -c 'pytest .'
+
+  db:
+    container_name: postgres_db
+    image: postgres:15.1-alpine
+    restart: always
+    environment:
+      - PGUSER=${DB_USER}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - ${DB_PORT}:5432
+    networks:
+      - todo-network
+    volumes:
+      - ../postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", 'pg_isready']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  todo:
+
+networks:
+  todo-network:
