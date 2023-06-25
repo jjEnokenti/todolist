@@ -7,8 +7,10 @@ from rest_framework.reverse import reverse
 
 @pytest.mark.django_db
 class TestGoalAPI:
-
+    """Goal API tests"""
     def test_is_anon_permissions_get_list_goals(self, client):
+        """Test anonim user permissions to get list of goals."""
+
         url = reverse('list_goal')
 
         response = client.get(path=url)
@@ -16,6 +18,8 @@ class TestGoalAPI:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_is_anon_permissions_create_goal(self, client, goal_category):
+        """Test anonim user permissions to create goal."""
+
         url = reverse('create_goal')
 
         payload = {
@@ -28,6 +32,8 @@ class TestGoalAPI:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_is_anon_permissions_get_single_goal(self, client, goal):
+        """Test anonim user permissions to get single goal."""
+
         url = reverse('detail_goal', kwargs={'pk': goal.pk})
 
         response = client.get(path=url)
@@ -35,6 +41,8 @@ class TestGoalAPI:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_is_anon_permissions_update_goal(self, client, goal):
+        """Test anonim user permissions to update gaol."""
+
         url = reverse('detail_goal', kwargs={'pk': goal.pk})
 
         payload = {
@@ -46,6 +54,8 @@ class TestGoalAPI:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_is_anon_permissions_delete_goal(self, client, goal):
+        """Test anonim user permissions to delete goal."""
+
         url = reverse('detail_goal', kwargs={'pk': goal.pk})
 
         response = client.delete(path=url)
@@ -53,6 +63,8 @@ class TestGoalAPI:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_create_goal_as_owner(self, auth_client, board_participant, goal_category):
+        """Test to create goal as board owner."""
+
         url = reverse('create_goal')
         payload = {
             'title': 'new test goal',
@@ -66,6 +78,8 @@ class TestGoalAPI:
         assert response.data['title'] == 'new test goal'
 
     def test_create_goal_as_writer(self, auth_client, create_goal_for_test_writer):
+        """Test to create goal as board writer."""
+
         goal = create_goal_for_test_writer
         url = reverse('create_goal')
         payload = {
@@ -80,6 +94,8 @@ class TestGoalAPI:
         assert response.data['title'] == 'new test goal as writer'
 
     def test_create_goal_as_reader(self, auth_client, create_goal_for_test_reader):
+        """Test to create goal as board reader."""
+
         goal = create_goal_for_test_reader
         url = reverse('create_goal')
         payload = {
@@ -92,6 +108,8 @@ class TestGoalAPI:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_get_single_goal_as_owner(self, auth_client, board_participant, goal, goal_category):
+        """Test to get single goal as board owner."""
+
         url = reverse('detail_goal', kwargs={'pk': goal.pk})
 
         response = auth_client.get(path=url)
@@ -101,6 +119,8 @@ class TestGoalAPI:
         assert response.data['category'] == goal_category.pk
 
     def test_get_single_goal_as_writer(self, auth_client, create_goal_for_test_writer):
+        """Test to get single goal as board writer."""
+
         goal = create_goal_for_test_writer
         url = reverse('detail_goal', kwargs={'pk': goal.pk})
 
@@ -111,6 +131,8 @@ class TestGoalAPI:
         assert response.data['category'] == goal.category.pk
 
     def test_get_single_goal_as_reader(self, auth_client, create_goal_for_test_reader):
+        """Test to get single goal as board reader."""
+
         goal = create_goal_for_test_reader
         url = reverse('detail_goal', kwargs={'pk': goal.pk})
 
@@ -121,6 +143,8 @@ class TestGoalAPI:
         assert response.data['category'] == goal.category.pk
 
     def test_get_list_goal_as_owner(self, auth_client, board_participant, goal_factory, goal_category):
+        """Test to get list of goals as board owner."""
+
         url = reverse('list_goal')
         count = 5
         goals = goal_factory.create_batch(size=count, category=goal_category)
@@ -132,6 +156,8 @@ class TestGoalAPI:
         assert len(response.data) == count
 
     def test_get_list_goal_as_writer(self, auth_client, create_goal_for_test_writer):
+        """Test to get list of goals as board writer."""
+
         url = reverse('list_goal')
 
         response = auth_client.get(url)
@@ -141,6 +167,8 @@ class TestGoalAPI:
         assert len(response.data) == 1
 
     def test_get_list_goal_as_reader(self, auth_client, create_goal_for_test_reader):
+        """Test to get list of goals as board reader."""
+
         url = reverse('list_goal')
 
         response = auth_client.get(url)
@@ -150,6 +178,8 @@ class TestGoalAPI:
         assert len(response.data) == 1
 
     def test_update_goal_as_owner(self, auth_client, board_participant, goal):
+        """Test to update goal as board owner."""
+
         url = reverse('detail_goal', kwargs={'pk': goal.pk})
         update_data = {
             'title': 'update title',
@@ -163,6 +193,8 @@ class TestGoalAPI:
         assert response.data['status'] == models.Goal.Status.done
 
     def test_update_goal_as_writer(self, auth_client, create_goal_for_test_writer):
+        """Test to update goal as board writer."""
+
         goal = create_goal_for_test_writer
         url = reverse('detail_goal', kwargs={'pk': goal.pk})
 
@@ -177,6 +209,8 @@ class TestGoalAPI:
         assert goal_response.data['title'] == 'writer can update this title'
 
     def test_update_goal_as_reader(self, auth_client, create_goal_for_test_reader):
+        """Test to update goal as board reader."""
+
         goal = create_goal_for_test_reader
         url = reverse('detail_goal', kwargs={'pk': goal.pk})
 
@@ -191,6 +225,8 @@ class TestGoalAPI:
         assert goal_response.data['title'] != 'reader cant update this title'
 
     def test_try_update_goal_category(self, auth_client, board_participant, goal, goal_category_factory):
+        """Test try update category pk."""
+
         url = reverse('detail_goal', kwargs={'pk': goal.pk})
 
         category = goal_category_factory.create()
@@ -205,6 +241,8 @@ class TestGoalAPI:
         assert response.data['category'] == goal.category.pk
 
     def test_delete_goal_as_owner(self, auth_client, board_participant, goal):
+        """Test to delete goal as board owner."""
+
         url = reverse('detail_goal', kwargs={'pk': goal.pk})
 
         response = auth_client.delete(path=url)
@@ -212,6 +250,8 @@ class TestGoalAPI:
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
     def test_delete_goal_as_writer(self, auth_client, create_goal_for_test_writer):
+        """Test to delete goal as board writer."""
+
         goal = create_goal_for_test_writer
         url = reverse('detail_goal', kwargs={'pk': goal.pk})
 
@@ -220,6 +260,8 @@ class TestGoalAPI:
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
     def test_delete_goal_as_reader(self, auth_client, create_goal_for_test_reader):
+        """Test to delete goal as board reader."""
+
         goal = create_goal_for_test_reader
         url = reverse('detail_goal', kwargs={'pk': goal.pk})
 
