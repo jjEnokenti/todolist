@@ -4,7 +4,7 @@ from django.db import models
 
 
 class TgUser(models.Model):
-
+    """Telegram user model."""
     user = models.ForeignKey('core.User', verbose_name='Пользователь', null=True, on_delete=models.CASCADE)
     chat_id = models.PositiveBigIntegerField(verbose_name='ID телеграм чата')
     tg_user_id = models.BigIntegerField(verbose_name='ID Телеграм пользователя')
@@ -19,10 +19,8 @@ class TgUser(models.Model):
         return self.user.username
 
     def generate_code(self):
+        """Random code generate method."""
         code = uuid.uuid4()
         self.verification_code = code
         self.save()
         return code
-
-    # def get_absolute_url(self):
-    #     return reverse('bot-verify', kwargs={'slug': self.verification_code})

@@ -11,6 +11,7 @@ from goals.models import GoalCategory
 
 
 class Command(BaseCommand):
+    """Hande message class."""
     help = 'Run bot command'
 
     tg_client = TgClient(settings.BOT_TOKEN)

@@ -19,6 +19,7 @@ USER_MODEL = get_user_model()
 
 
 class Controller:
+    """Class the class makes queries to the database."""
     def __init__(self, message: Message, allowed_commands: list | None = None):
         self.allowed_commands = allowed_commands or ['/create', '/cancel', '/goals', '/start']
         self.message = message

@@ -8,6 +8,7 @@ from bot.tg.dc import (
 
 
 class TgClient:
+    """Telegram client."""
     def __init__(self, token):
         self.token = token
 
