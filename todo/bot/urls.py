@@ -4,5 +4,5 @@ from . import views
 
 
 urlpatterns = [
-    path('verify', views.BotVerify.as_view()),
+    path('verify', views.BotVerify.as_view(), name='bot_verify'),
 ]

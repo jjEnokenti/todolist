@@ -7,7 +7,7 @@ from django.core import exceptions
 from dotenv import load_dotenv
 from rest_framework import (
     generics,
-    permissions
+    permissions,
 )
 from rest_framework.response import Response
 
@@ -16,6 +16,10 @@ load_dotenv()
 
 
 class BotVerify(generics.UpdateAPIView):
+    """Bot verify update view class.
+
+    only patch method.
+    """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = BotVerifySerializer
     http_method_names = ['patch']

@@ -10,12 +10,14 @@ from marshmallow import EXCLUDE
 
 @dataclass
 class BaseSchema:
+    """Base schema."""
     class Meta:
         unknown = EXCLUDE
 
 
 @dataclass
 class Chat(BaseSchema):
+    """Chat schema."""
     id: int
     first_name: str | None
     username: str | None
@@ -23,6 +25,7 @@ class Chat(BaseSchema):
 
 @dataclass
 class User(BaseSchema):
+    """User schema."""
     id: int
     is_bot: bool
     first_name: str | None
@@ -31,6 +34,7 @@ class User(BaseSchema):
 
 @dataclass
 class Message(BaseSchema):
+    """Message schema."""
     message_id: int
     from_user: User = field(metadata={'data_key': 'from'})
     chat: Chat
@@ -39,6 +43,7 @@ class Message(BaseSchema):
 
 @dataclass
 class Update(BaseSchema):
+    """Telegram update schema."""
     update_id: int
     message: Message | None
     edited_message: Message | None
@@ -46,12 +51,14 @@ class Update(BaseSchema):
 
 @dataclass
 class GetUpdatesResponse(BaseSchema):
+    """Updates response schema."""
     ok: bool
     result: List[Update]
 
 
 @dataclass
 class SendMessageResponse(BaseSchema):
+    """Send message response schema."""
     ok: bool
     result: Message
 
