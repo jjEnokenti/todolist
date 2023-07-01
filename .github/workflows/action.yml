@@ -7,11 +7,10 @@ jobs:
   build_and_push:
     runs-on: ubuntu-latest
     steps:
-      - name: Python Pylint GitHub Action
+      - name: Python Pylin GitHub Action
         uses: fylein/python-pylint-github-action@v1
         with:
-          args: poetry config virtualenvs.create false \
-                && poetry install --no-dev --no-interaction --no-ansi --no-root
+          args: pip3 install -r requirements.txt && pylint --rcfile=.pylintrc src/
       - name: clone code
         uses: actions/checkout@v2
       - name: docker build
