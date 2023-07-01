@@ -1,12 +1,17 @@
 name: build todolist
-on:
-  push:
-    branches:
-      - main
+on: [push]
+#  push:
+#    branches:
+#      - main
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
     steps:
+      - name: Python Pylint GitHub Action
+        uses: fylein/python-pylint-github-action@v1
+        with:
+          args: poetry config virtualenvs.create false \
+                && poetry install --no-dev --no-interaction --no-ansi --no-root
       - name: clone code
         uses: actions/checkout@v2
       - name: docker build
