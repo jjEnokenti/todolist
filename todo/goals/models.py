@@ -26,7 +26,7 @@ class Board(DateTimeMixin):
     is_deleted = models.BooleanField(verbose_name='Удалена', default=False)
 
     def __str__(self):
-        return self.title
+        return f'{self.title}'
 
 
 class BoardParticipant(DateTimeMixin):
@@ -79,7 +79,7 @@ class GoalCategory(DateTimeMixin):
     is_deleted = models.BooleanField(verbose_name='Удалена', default=False)
 
     def __str__(self):
-        return self.title
+        return f'{self.title}'
 
 
 class Goal(DateTimeMixin):
@@ -125,7 +125,7 @@ class Goal(DateTimeMixin):
     )
 
     def __str__(self):
-        return self.title
+        return f'{self.title}'
 
 
 class Comment(DateTimeMixin):
