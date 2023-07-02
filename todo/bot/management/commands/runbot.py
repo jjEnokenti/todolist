@@ -30,9 +30,13 @@ class Command(BaseCommand):
                 self.handle_message(item.message)
 
     def send_message(self, chat_id, text: str):
+        """Send message to user method."""
+
         self.tg_client.send_message(chat_id=chat_id, text=text)
 
     def user_answer(self, message: Message, text: str) -> str:
+        """Obtain answer from user method."""
+
         while True:
             self.tg_client.send_message(
                 message.chat.id,
@@ -45,6 +49,8 @@ class Command(BaseCommand):
                 return item.message.text
 
     def handle_message(self, message: Message):
+        """Main message handler method."""
+
         controller = Controller(
             message=message
         )
@@ -80,6 +86,7 @@ class Command(BaseCommand):
             self.create_goal(message, controller)
 
     def get_goals(self, message: Message, goals):
+        """Formatted message with goals method."""
 
         text = '\n----------\n'.join(['\n'.join((
             f'Название - {goal.title}',
@@ -97,6 +104,7 @@ class Command(BaseCommand):
     def get_category(self, message: Message,
                      categories: QuerySet[GoalCategory] | None,
                      text: str | None = None) -> str:
+        """Get category method."""
 
         user_categories = [f'{cat.id}: {cat.title}' for cat in categories]
 
@@ -105,6 +113,7 @@ class Command(BaseCommand):
         return self.user_answer(message, text)
 
     def create_goal(self, message: Message, controller: Controller):
+        """Create new goal method."""
         text = None
         categories = controller.get_categories()
         while True:
@@ -131,4 +140,5 @@ class Command(BaseCommand):
         return self.get_goals(message, [new_goal])
 
     def cancel(self, message: Message):
+        """Cancel operation method."""
         self.send_message(chat_id=message.chat.id, text='Операция отменена.')
