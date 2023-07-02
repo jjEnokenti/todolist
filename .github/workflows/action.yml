@@ -10,7 +10,7 @@ jobs:
       - name: Python Pylin GitHub Action
         uses: fylein/python-pylint-github-action@v1
         with:
-          args: pip3 install -r requirements.txt && pylint --rcfile=.pylintrc src/
+          args: pip3 install pylint && pylint --rcfile=.pylintrc src/
       - name: clone code
         uses: actions/checkout@v2
       - name: docker build
