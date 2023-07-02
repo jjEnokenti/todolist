@@ -1,0 +1,5 @@
+[flake8]
+exclude = .git,__pycache__,**/migrations/**,.venv,.idea,.git
+max-line-length = 120
+ignore = E203,W503
+inline-quotes = 'single'
