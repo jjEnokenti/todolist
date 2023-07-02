@@ -1,14 +1,18 @@
 name: build todolist
-on:
-  push:
-    branches:
-      - main
+on: [push]
+#  push:
+#    branches:
+#      - main
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
     steps:
       - name: clone code
         uses: actions/checkout@v2
+      - name: Python Pylin GitHub Action
+        uses: fylein/python-pylint-github-action@v1
+        with:
+          args: pip3 install pylint && pylint --rcfile=.pylintrc todo
       - name: docker build
         run: docker build -t jjenokenti/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
       - name: docker login
