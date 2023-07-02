@@ -21,6 +21,7 @@ class GoalCategoryCreateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate_board(self, board):
+        """Validate board object for goal category."""
         if board.is_deleted:
             raise serializers.ValidationError({'create error': 'Board is deleted.'})
         if board.participants.filter(

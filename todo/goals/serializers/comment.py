@@ -51,6 +51,7 @@ class CommentCreateSerializer(serializers.ModelSerializer):
         }
 
     def validate_goal(self, goal):
+        """Validate goal object by comment."""
         if goal.status == goal.Status.archived:
             raise serializers.ValidationError({'create error': 'goal is deleted.'})
         if BoardParticipant.objects.filter(
