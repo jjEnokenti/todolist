@@ -22,16 +22,16 @@ class TgClient:
         """Get updates from telegram server."""
         url = self.get_url(method='getUpdates')
         params = {'offset': offset, 'timeout': timeout}
-        data = requests.get(url=url, params=params)
+        data = requests.get(url=url, params=params, timeout=timeout)
         if data.ok:
             return get_updates_schema().load(data.json())
         return data
 
-    def send_message(self, chat_id: int, text: str) -> SendMessageResponse | Response:
+    def send_message(self, chat_id: int, text: str, timeout: int = 60) -> SendMessageResponse | Response:
         """Send message to telegram client."""
         url = self.get_url(method='sendMessage')
         params = {'chat_id': chat_id, 'text': text}
-        data = requests.get(url=url, params=params)
+        data = requests.get(url=url, params=params, timeout=timeout)
         if data.ok:
             return send_message_schema().load(data.json())
         return data
