@@ -1,8 +1,9 @@
 import pytest
-from goals.models import BoardParticipant
-from goals.serializers.category import GoalCategorySerializer
 from rest_framework import status
 from rest_framework.reverse import reverse
+
+from goals.models import BoardParticipant
+from goals.serializers.category import GoalCategorySerializer
 
 
 @pytest.mark.django_db

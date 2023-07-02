@@ -1,10 +1,11 @@
 import json
 
 import pytest
-from goals.models import BoardParticipant
-from goals.serializers.board import BoardListSerializer
 from rest_framework import status
 from rest_framework.reverse import reverse
+
+from goals.models import BoardParticipant
+from goals.serializers.board import BoardListSerializer
 
 
 @pytest.mark.django_db

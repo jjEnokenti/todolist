@@ -1,8 +1,9 @@
 import pytest
-from goals import models
-from goals.serializers.goal import GoalSerializer
 from rest_framework import status
 from rest_framework.reverse import reverse
+
+from goals import models
+from goals.serializers.goal import GoalSerializer
 
 
 @pytest.mark.django_db

@@ -1,7 +1,8 @@
 import pytest
-from goals.serializers.comment import CommentSerializer
 from rest_framework import status
 from rest_framework.reverse import reverse
+
+from goals.serializers.comment import CommentSerializer
 
 
 @pytest.mark.django_db

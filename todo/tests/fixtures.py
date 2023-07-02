@@ -1,4 +1,5 @@
 import pytest
+
 from goals.models import BoardParticipant
 from tests import factories
 
