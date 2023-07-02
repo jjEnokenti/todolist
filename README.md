@@ -2,7 +2,8 @@
 
 ---
 
-<h3 align="center">Приложение доступно по <a href="http://somemarket.tk">этой</a> ссылке</h3>
+<h3 align="center">Приложение доступно по <a href="http://somemarket.tk">этой</a> ссылке.</h3>
+<h3 align="center">Телеграмм <a href="https://t.me/todolist_helper_bot">бот</a></h3>
 
 ---
 
