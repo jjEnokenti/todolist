@@ -1,8 +1,5 @@
 import os
 
-from bot.models import TgUser
-from bot.serializers import BotVerifySerializer
-from bot.tg.client import TgClient
 from django.core import exceptions
 from dotenv import load_dotenv
 from rest_framework import (
@@ -10,6 +7,10 @@ from rest_framework import (
     permissions,
 )
 from rest_framework.response import Response
+
+from bot.models import TgUser
+from bot.serializers import BotVerifySerializer
+from bot.tg.client import TgClient
 
 
 load_dotenv()

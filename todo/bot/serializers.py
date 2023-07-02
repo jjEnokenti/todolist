@@ -1,5 +1,6 @@
-from bot.models import TgUser
 from rest_framework import serializers
+
+from bot.models import TgUser
 
 
 class BotVerifySerializer(serializers.ModelSerializer):

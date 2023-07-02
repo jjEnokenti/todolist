@@ -1,12 +1,13 @@
 from typing import Any
 
+from django.contrib.auth import get_user_model
+from django.db.models import QuerySet
+
 from bot.models import TgUser
 from bot.tg.dc import (
     Message,
     User,
 )
-from django.contrib.auth import get_user_model
-from django.db.models import QuerySet
 from goals.models import (
     Board,
     BoardParticipant,

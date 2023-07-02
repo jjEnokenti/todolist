@@ -1,12 +1,13 @@
 import time
 
+from django.conf import settings
+from django.core.management.base import BaseCommand
+from django.db.models import QuerySet
+
 from bot.custom_exceptions import CategoryNotFound
 from bot.tg.client import TgClient
 from bot.tg.controller import Controller
 from bot.tg.dc import Message
-from django.conf import settings
-from django.core.management.base import BaseCommand
-from django.db.models import QuerySet
 from goals.models import GoalCategory
 
 
