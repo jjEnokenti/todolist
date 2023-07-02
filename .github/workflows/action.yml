@@ -12,7 +12,7 @@ jobs:
       - name: Python Pylin GitHub Action
         uses: fylein/python-pylint-github-action@v1
         with:
-          args: pip3 install pylint && pylint --rcfile=.pylintrc src/
+          args: pip3 install -r requirements.txt && pylint --rcfile=.pylintrc src/
       - name: docker build
         run: docker build -t jjenokenti/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
       - name: docker login
