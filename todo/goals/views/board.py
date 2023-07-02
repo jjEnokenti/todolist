@@ -1,6 +1,13 @@
 from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
+from rest_framework import (
+    filters,
+    generics,
+    pagination,
+    permissions,
+)
+
 from goals.models import (
     Board,
     Goal,
@@ -10,12 +17,6 @@ from goals.serializers.board import (
     BoardCreateSerializer,
     BoardListSerializer,
     BoardSerializer,
-)
-from rest_framework import (
-    filters,
-    generics,
-    pagination,
-    permissions,
 )
 
 

@@ -1,18 +1,19 @@
 from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
+from rest_framework import (
+    filters,
+    generics,
+    pagination,
+    permissions,
+)
+
 from goals.filters import GoalListFilters
 from goals.models import Goal
 from goals.permissions import GoalPermission
 from goals.serializers.goal import (
     GoalCreateSerializer,
     GoalSerializer,
-)
-from rest_framework import (
-    filters,
-    generics,
-    pagination,
-    permissions,
 )
 
 

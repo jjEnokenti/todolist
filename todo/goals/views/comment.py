@@ -1,17 +1,18 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
-from goals.models import Comment
-from goals.permissions import CommentPermission
-from goals.serializers.comment import (
-    CommentCreateSerializer,
-    CommentSerializer,
-)
 from rest_framework import (
     exceptions,
     filters,
     generics,
     pagination,
     permissions,
+)
+
+from goals.models import Comment
+from goals.permissions import CommentPermission
+from goals.serializers.comment import (
+    CommentCreateSerializer,
+    CommentSerializer,
 )
 
 
