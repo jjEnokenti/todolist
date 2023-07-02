@@ -1,11 +1,12 @@
+from rest_framework import (
+    exceptions,
+    serializers,
+)
+
 from core.serializers import UserProfileSerializer
 from goals.models import (
     BoardParticipant,
     Comment,
-)
-from rest_framework import (
-    exceptions,
-    serializers,
 )
 
 
@@ -55,10 +56,8 @@ class CommentCreateSerializer(serializers.ModelSerializer):
         if BoardParticipant.objects.filter(
                 board=goal.category.board,
                 user=self.context['request'].user,
-                role__in=(
-                        BoardParticipant.Role.owner,
-                        BoardParticipant.Role.writer
-                )
+                role__in=(BoardParticipant.Role.owner,
+                          BoardParticipant.Role.writer)
         ).exists():
             return goal
 
