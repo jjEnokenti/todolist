@@ -1,6 +1,7 @@
 from django.db import models
 from django_filters import IsoDateTimeFilter
 from django_filters import rest_framework as f
+
 from goals.models import Goal
 
 

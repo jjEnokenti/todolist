@@ -5,7 +5,7 @@ from .models import (
     BoardParticipant,
     Comment,
     Goal,
-    GoalCategory
+    GoalCategory,
 )
 
 

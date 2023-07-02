@@ -1,5 +1,6 @@
-from goals.models import BoardParticipant
 from rest_framework import permissions
+
+from goals.models import BoardParticipant
 
 
 permission_roles = (
