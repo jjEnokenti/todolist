@@ -33,7 +33,7 @@ class Controller:
         )
 
     def create_goal(self, title: str, pk: Any) -> Goal:
-
+        """Create new goal from tg user."""
         category = self.get_category(pk)
         new_goal = Goal.objects.create(
             category_id=category.id,
@@ -43,6 +43,8 @@ class Controller:
         return new_goal
 
     def get_goals(self) -> QuerySet[Goal] | None:
+        """Get goals by tg user."""
+
         goals = Goal.objects.filter(
             category__board__participants__user=self.tg_user.user,
             category__board__participants__role=BoardParticipant.Role.owner
@@ -54,6 +56,8 @@ class Controller:
         return goals
 
     def get_category(self, pk: int) -> GoalCategory | None:
+        """Get single category if exist by tg user."""
+
         return GoalCategory.objects.filter(
             pk=pk,
             board__participants__user=self.tg_user.user,
@@ -61,6 +65,8 @@ class Controller:
             is_deleted=False).first()
 
     def get_categories(self) -> QuerySet[GoalCategory]:
+        """Get categories for show tg user."""
+
         categories = GoalCategory.objects.filter(
             board__participants__user=self.tg_user.user,
             board__participants__role=BoardParticipant.Role.owner,
