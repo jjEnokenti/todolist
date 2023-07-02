@@ -1,4 +1,4 @@
 [MASTER]
 ignore = tests, migrations, manage.py
-disable = C0114,C0115,R0903,E0401,C0103,W0613,W0223,E1101,W1508
+disable = C0114,C0115,R0903,E0401,C0103,W0613,W0223,E1101,W1508,C0116
 max-line-length = 120
